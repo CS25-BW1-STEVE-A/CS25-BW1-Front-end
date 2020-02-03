@@ -1,102 +1,60 @@
 import React, { useState } from "react";
 import axios from "axios";
-import styled from "styled-components";
-import {
-  createBoard,
-  baseURL,
-  axiosWithAuth,
-  checkCoordinates
-} from "../utils/index";
+import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
+import { reducer, initialState, KEY_CODES } from "../reducers/index";
+import { axiosWithAuth, baseURL } from "../utils/index";
 
-const Board = styled.div`
-  max-width: 500px;
-  margin: 20px auto;
-`;
+//Board we're anticipating from BE
+// const board = [
+//   ["R", "", ""],
+//   ["R", "", ""],
+//   ["R", "R", "R"]
+// ];
 
-const Cell = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 1px solid black;
-`;
-
-const Row = styled.div`
-  display: flex;
-`;
-
-const KEY_CODES = {
-  ArrowUp: "UP",
-  ArrowDown: "DOWN",
-  ArrowLeft: "LEFT",
-  ArrowRight: "RIGHT"
-};
-
-const VECTORS = {
-  UP: [-1, 0],
-  DOWN: [1, 0],
-  LEFT: [0, -1],
-  RIGHT: [0, 1]
-};
-
-function updatePosition(board, direction, currentPosition) {
-  let newPositionRow = currentPosition[0] + VECTORS[direction][0];
-  let newPositionCol = currentPosition[1] + VECTORS[direction][1];
-  let newPosition = [newPositionRow, newPositionCol];
-  if (checkCoordinates(board, newPosition)) {
-    return newPosition;
-  } else {
-    return currentPosition;
-  }
-}
-
-const initialState = {
-  game: {
-    board: createBoard(10),
-    isGameOver: true
-  },
-  player: {
-    coordinates: [-Infinity, Infinity],
-    direction: ""
-  },
-  room: {
-    coordinates: [0, 0],
-    title: "Some room"
-  }
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "MOVE_PLAYER":
-      return {
-        ...state,
-        player: {
-          ...state.player,
-          coordinates: updatePosition(
-            state.game.board,
-            action.direction,
-            state.player.coordinates
-          )
-        },
-        room: {
-          ...state.room,
-          coordinates: action.coordinates
-        }
-      };
-    case "GAME_START":
-      console.log(action);
-      return {
-        ...state,
-        game: {
-          ...state.game,
-          isGameOver: false
-        },
-        player: {
-          ...state.player,
-          coordinates: action.startingPosition
-        }
-      };
-  }
-};
+//now we'll put objects in there
+const board = [
+  [
+    {
+      name: "The Garden",
+      description: "A beautiful garden",
+      exits: ["south"],
+      players: []
+    },
+    "",
+    ""
+  ],
+  [
+    {
+      name: "The Dungeon",
+      description: "A dank dungeon",
+      exits: ["south"],
+      players: []
+    },
+    "",
+    ""
+  ],
+  [
+    {
+      name: "The Garden",
+      description: "A beautiful garden",
+      exits: ["north", "east"],
+      players: []
+    },
+    {
+      name: "The Book",
+      description: "A beautiful book",
+      exits: ["west", "east"],
+      players: []
+    },
+    {
+      name: "The Eagle",
+      description: "A eagle appears",
+      exits: ["west"],
+      players: []
+    }
+  ]
+];
 
 export default function() {
   const [gameStarted, setGameStarted] = useState(false);
@@ -110,12 +68,17 @@ export default function() {
       .then(res => {
         console.log("axios with auth", res);
         //start game
-        dispatch({ type: "GAME_START", startingPosition: [0, 0] });
+        dispatch({
+          type: "GAME_START",
+          //starting position is for the room
+          startingPosition: [0, 0],
+          gameBoard: board,
+          //starting room is which room on the board we're going to start in
+          startingRoom: [0, 0]
+        });
       })
       .catch(err => console.log("axios with auth", err));
   };
-
-  console.log("the state is", state);
 
   const moveCharacter = e => {
     if (KEY_CODES[e.key]) {
@@ -128,28 +91,12 @@ export default function() {
   };
 
   useEventListener("keydown", moveCharacter);
+
   return (
     <div>
       <h1>This is the best game</h1>
       <button onClick={handleClick}>Start Game</button>
-      <Board className="board" onKeyPress={moveCharacter}>
-        {state.game.board.map((row, rowIdx) => {
-          return (
-            <Row key={rowIdx} className="row">
-              {state.game.board[rowIdx].map((col, colIdx) => {
-                return (
-                  <Cell key={colIdx} className="cell">
-                    {state.player.coordinates[0] === rowIdx &&
-                    state.player.coordinates[1] === colIdx
-                      ? "X"
-                      : ""}
-                  </Cell>
-                );
-              })}
-            </Row>
-          );
-        })}
-      </Board>
+      <Room state={state} />
     </div>
   );
 }
