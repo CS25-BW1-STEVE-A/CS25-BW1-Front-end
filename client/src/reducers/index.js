@@ -18,7 +18,11 @@ function updatePosition(board, direction, currentPosition) {
   let newPositionRow = currentPosition[0] + VECTORS[direction][0];
   let newPositionCol = currentPosition[1] + VECTORS[direction][1];
   let newPosition = [newPositionRow, newPositionCol];
-  if (checkCoordinates(board, newPosition)) {
+
+  //checking if user went into a door
+  if (board[newPositionRow][newPositionCol] === "Door") {
+    console.log("user went into a door!");
+  } else if (checkCoordinates(board, newPosition)) {
     return newPosition;
   } else {
     return currentPosition;
