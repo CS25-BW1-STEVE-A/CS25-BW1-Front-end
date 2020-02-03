@@ -25,6 +25,55 @@ function updatePosition(board, direction, currentPosition) {
   }
 }
 
+function createRoom(exits, size) {
+  let board = [];
+  //Adding a border of walls or doors
+  size += 2;
+
+  for (let i = 0; i < size; i++) {
+    board.push([]);
+    for (let j = 0; j < size; j++) {
+      //Top, bottom, left, and right walls
+      if (i === 0 || i === size - 1 || j === 0 || j === size - 1) {
+        board[i].push("Wall");
+      } else {
+        board[i].push("");
+      }
+    }
+  }
+
+  // ["east", "west" , "north", "south"]
+  if (exits.includes("north")) {
+    let rowIdx = 0;
+    //random number between 1 and 5 inclusively
+    let colIdx = Math.floor(Math.random() * (size - 2) + 1);
+    board[rowIdx][colIdx] = "Door";
+  }
+
+  if (exits.includes("south")) {
+    let rowIdx = size - 1;
+    //random number between 1 and 5 inclusively
+    let colIdx = Math.floor(Math.random() * (size - 2) + 1);
+    board[rowIdx][colIdx] = "Door";
+  }
+
+  if (exits.includes("west")) {
+    let rowIdx = Math.floor(Math.random() * (size - 2) + 1);
+    //random number between 1 and 5 inclusively
+    let colIdx = 0;
+    board[rowIdx][colIdx] = "Door";
+  }
+
+  if (exits.includes("east")) {
+    let rowIdx = Math.floor(Math.random() * (size - 2) + 1);
+    //random number between 1 and 5 inclusively
+    let colIdx = size - 1;
+    board[rowIdx][colIdx] = "Door";
+  }
+
+  return board;
+}
+
 export const initialState = {
   game: {
     board: createBoard(10),
@@ -74,7 +123,8 @@ export const reducer = (state, action) => {
         },
         room: {
           ...state.room,
-          ...action.gameBoard[action.startingRoom[0]][action.startingRoom[1]]
+          ...action.startingRoom,
+          board: createRoom(action.startingRoom.exits, 5)
         }
       };
   }

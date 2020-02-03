@@ -71,10 +71,10 @@ export default function() {
         dispatch({
           type: "GAME_START",
           //starting position is for the room
-          startingPosition: [0, 0],
+          startingPosition: [1, 1],
           gameBoard: board,
           //starting room is which room on the board we're going to start in
-          startingRoom: [0, 0]
+          startingRoom: board[0][0]
         });
       })
       .catch(err => console.log("axios with auth", err));

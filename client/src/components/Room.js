@@ -1,15 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import Cell from "./Cell";
 
 const Board = styled.div`
   max-width: 500px;
   margin: 20px auto;
-`;
-
-const Cell = styled.div`
-  width: 50px;
-  height: 50px;
-  border: 1px solid black;
 `;
 
 const Row = styled.div`
@@ -24,14 +19,7 @@ export default function Room({ state }) {
         return (
           <Row key={rowIdx} className="row">
             {state.room.board[rowIdx].map((col, colIdx) => {
-              return (
-                <Cell key={colIdx} className="cell">
-                  {state.player.coordinates[0] === rowIdx &&
-                  state.player.coordinates[1] === colIdx
-                    ? "X"
-                    : ""}
-                </Cell>
-              );
+              return <Cell state={state} colIdx={colIdx} rowIdx={rowIdx} />;
             })}
           </Row>
         );
