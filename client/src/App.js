@@ -4,6 +4,8 @@ import LandingPage from "./components/LandingPage";
 import PrivateRoute from "./components/PrivateRoute";
 import Game from "./components/Game";
 import Layout from "./components/Layout";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 function App() {
   return (
@@ -14,6 +16,12 @@ function App() {
             <PrivateRoute path="/game">
               <Game />
             </PrivateRoute>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/register">
+              <Register />
+            </Route>
             <Route path="/">
               <LandingPage />
             </Route>
