@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { createBoard, baseURL, axiosWithAuth } from "../utils/index";
 import axios from "axios";
 import styled from "styled-components";
+import {
+  createBoard,
+  baseURL,
+  axiosWithAuth,
+  checkCoordinates
+} from "../utils/index";
+import useEventListener from "../hooks/useEventListener";
 
 const Board = styled.div`
   max-width: 500px;
@@ -40,11 +46,42 @@ export default function() {
       })
       .catch(err => console.log("axios with auth", err));
   };
+
+  const moveCharacter = e => {
+    console.log(e);
+    let [row, col] = position;
+    let copyBoard = [...board];
+    if (e.key === "ArrowUp" && checkCoordinates(copyBoard, [row - 1, col])) {
+      copyBoard[row][col] = "";
+      copyBoard[row - 1][col] = "X";
+      setBoard(copyBoard);
+    }
+
+    if (e.key === "ArrowDown" && checkCoordinates(copyBoard, [row + 1, col])) {
+      copyBoard[row][col] = "";
+      copyBoard[row + 1][col] = "X";
+      setBoard(copyBoard);
+    }
+
+    if (e.key === "ArrowRight" && checkCoordinates(copyBoard, [row, col + 1])) {
+      copyBoard[row][col] = "";
+      copyBoard[row][col + 1] = "X";
+      setBoard(copyBoard);
+    }
+
+    if (e.key === "ArrowUp" && checkCoordinates(copyBoard, [row, col - 1])) {
+      copyBoard[row][col] = "";
+      copyBoard[row][col - 1] = "X";
+      setBoard(copyBoard);
+    }
+  };
+
+  useEventListener("keydown", moveCharacter);
   return (
     <div>
       <h1>This is the best game</h1>
       <button onClick={handleClick}>Start Game</button>
-      <Board className="board">
+      <Board className="board" onKeyPress={moveCharacter}>
         {board.map((row, rowIdx) => {
           return (
             <Row key={rowIdx} className="row">

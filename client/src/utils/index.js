@@ -25,3 +25,15 @@ export const axiosWithAuth = () => {
     }
   });
 };
+
+export const checkCoordinates = (board, newPosition) => {
+  //outside bounds of game and not on someone
+  let [row, col] = newPosition;
+  return (
+    row >= 0 &&
+    row < board.length &&
+    col > 0 &&
+    col < board[row].length &&
+    board[row][col] === ""
+  );
+};
