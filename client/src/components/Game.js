@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBoard, baseURL, axiosWithAuth } from "../utils/index";
 import axios from "axios";
 import styled from "styled-components";
@@ -19,14 +19,25 @@ const Row = styled.div`
 `;
 
 export default function() {
-  const [gameStarted, setGameStarted] = React.useState(false);
-  const [board, setBoard] = React.useState(createBoard(10));
+  const [gameStarted, setGameStarted] = useState(false);
+  const [board, setBoard] = useState(createBoard(10));
+  const [position, setPosition] = useState([0, 0]);
 
   const handleClick = () => {
     // stuff here
     axiosWithAuth()
       .get(`${baseURL}/api/adv/init`)
-      .then(res => console.log("axios with auth", res))
+      .then(res => {
+        console.log("axios with auth", res);
+        //start game
+        setGameStarted(true);
+
+        //set board based on position
+        let copyBoard = [...board];
+        copyBoard[position[0]][position[1]] = "X";
+        console.log(copyBoard);
+        setBoard(copyBoard);
+      })
       .catch(err => console.log("axios with auth", err));
   };
   return (
@@ -36,9 +47,13 @@ export default function() {
       <Board className="board">
         {board.map((row, rowIdx) => {
           return (
-            <Row className="row">
+            <Row key={rowIdx} className="row">
               {board[rowIdx].map((col, colIdx) => {
-                return <Cell className="cell">{col}</Cell>;
+                return (
+                  <Cell key={colIdx} className="cell">
+                    {col}
+                  </Cell>
+                );
               })}
             </Row>
           );
