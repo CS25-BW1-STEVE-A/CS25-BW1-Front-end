@@ -16,11 +16,12 @@ export const createBoard = size => {
 //Makes axios call and send token if existing
 export const axiosWithAuth = () => {
   const token = localStorage.getItem("token");
+
   console.log(token);
   return axios.create({
     baseURL: baseURL,
     headers: {
-      Authorization: token
+      Authorization: `Token ${token}`
     }
   });
 };
