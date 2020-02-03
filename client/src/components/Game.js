@@ -24,10 +24,84 @@ const Row = styled.div`
   display: flex;
 `;
 
+const KEY_CODES = {
+  ArrowUp: "UP",
+  ArrowDown: "DOWN",
+  ArrowLeft: "LEFT",
+  ArrowRight: "RIGHT"
+};
+
+const VECTORS = {
+  UP: [-1, 0],
+  DOWN: [1, 0],
+  LEFT: [0, -1],
+  RIGHT: [0, 1]
+};
+
+function updatePosition(board, direction, currentPosition) {
+  let newPositionRow = currentPosition[0] + VECTORS[direction][0];
+  let newPositionCol = currentPosition[1] + VECTORS[direction][1];
+  let newPosition = [newPositionRow, newPositionCol];
+  if (checkCoordinates(board, newPosition)) {
+    return newPosition;
+  } else {
+    return currentPosition;
+  }
+}
+
+const initialState = {
+  game: {
+    board: createBoard(10),
+    isGameOver: true
+  },
+  player: {
+    coordinates: [-Infinity, Infinity],
+    direction: ""
+  },
+  room: {
+    coordinates: [0, 0],
+    title: "Some room"
+  }
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "MOVE_PLAYER":
+      return {
+        ...state,
+        player: {
+          ...state.player,
+          coordinates: updatePosition(
+            state.game.board,
+            action.direction,
+            state.player.coordinates
+          )
+        },
+        room: {
+          ...state.room,
+          coordinates: action.coordinates
+        }
+      };
+    case "GAME_START":
+      console.log(action);
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          isGameOver: false
+        },
+        player: {
+          ...state.player,
+          coordinates: action.startingPosition
+        }
+      };
+  }
+};
+
 export default function() {
   const [gameStarted, setGameStarted] = useState(false);
-  const [board, setBoard] = useState(createBoard(10));
-  const [position, setPosition] = useState([0, 0]);
+
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
     // stuff here
@@ -36,48 +110,20 @@ export default function() {
       .then(res => {
         console.log("axios with auth", res);
         //start game
-        setGameStarted(true);
-
-        //set board based on position
-        let copyBoard = [...board];
-        copyBoard[position[0]][position[1]] = "X";
-        console.log(copyBoard);
-        setBoard(copyBoard);
+        dispatch({ type: "GAME_START", startingPosition: [0, 0] });
       })
       .catch(err => console.log("axios with auth", err));
   };
 
+  console.log("the state is", state);
+
   const moveCharacter = e => {
-    console.log(e);
-    let [row, col] = position;
-    let copyBoard = [...board];
-    if (e.key === "ArrowUp" && checkCoordinates(copyBoard, [row - 1, col])) {
-      copyBoard[row][col] = "";
-      copyBoard[row - 1][col] = "X";
-      setBoard(copyBoard);
-      setPosition([row - 1, col]);
-    }
-
-    if (e.key === "ArrowDown" && checkCoordinates(copyBoard, [row + 1, col])) {
-      copyBoard[row][col] = "";
-      copyBoard[row + 1][col] = "X";
-      setBoard(copyBoard);
-      setPosition([row + 1, col]);
-    }
-
-    if (e.key === "ArrowRight" && checkCoordinates(copyBoard, [row, col + 1])) {
-      console.log("ARROW RIGHTOIJWEOCIWJEFOIJ");
-      copyBoard[row][col] = "";
-      copyBoard[row][col + 1] = "X";
-      setBoard(copyBoard);
-      setPosition([row, col + 1]);
-    }
-
-    if (e.key === "ArrowLeft" && checkCoordinates(copyBoard, [row, col - 1])) {
-      copyBoard[row][col] = "";
-      copyBoard[row][col - 1] = "X";
-      setBoard(copyBoard);
-      setPosition([row, col - 1]);
+    if (KEY_CODES[e.key]) {
+      //make sure coordinates would work
+      dispatch({
+        type: "MOVE_PLAYER",
+        direction: KEY_CODES[e.key]
+      });
     }
   };
 
@@ -87,13 +133,16 @@ export default function() {
       <h1>This is the best game</h1>
       <button onClick={handleClick}>Start Game</button>
       <Board className="board" onKeyPress={moveCharacter}>
-        {board.map((row, rowIdx) => {
+        {state.game.board.map((row, rowIdx) => {
           return (
             <Row key={rowIdx} className="row">
-              {board[rowIdx].map((col, colIdx) => {
+              {state.game.board[rowIdx].map((col, colIdx) => {
                 return (
                   <Cell key={colIdx} className="cell">
-                    {col}
+                    {state.player.coordinates[0] === rowIdx &&
+                    state.player.coordinates[1] === colIdx
+                      ? "X"
+                      : ""}
                   </Cell>
                 );
               })}
