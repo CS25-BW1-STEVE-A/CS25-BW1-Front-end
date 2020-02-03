@@ -32,7 +32,7 @@ export const checkCoordinates = (board, newPosition) => {
   return (
     row >= 0 &&
     row < board.length &&
-    col > 0 &&
+    col >= 0 &&
     col < board[row].length &&
     board[row][col] === ""
   );

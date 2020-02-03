@@ -55,24 +55,29 @@ export default function() {
       copyBoard[row][col] = "";
       copyBoard[row - 1][col] = "X";
       setBoard(copyBoard);
+      setPosition([row - 1, col]);
     }
 
     if (e.key === "ArrowDown" && checkCoordinates(copyBoard, [row + 1, col])) {
       copyBoard[row][col] = "";
       copyBoard[row + 1][col] = "X";
       setBoard(copyBoard);
+      setPosition([row + 1, col]);
     }
 
     if (e.key === "ArrowRight" && checkCoordinates(copyBoard, [row, col + 1])) {
+      console.log("ARROW RIGHTOIJWEOCIWJEFOIJ");
       copyBoard[row][col] = "";
       copyBoard[row][col + 1] = "X";
       setBoard(copyBoard);
+      setPosition([row, col + 1]);
     }
 
-    if (e.key === "ArrowUp" && checkCoordinates(copyBoard, [row, col - 1])) {
+    if (e.key === "ArrowLeft" && checkCoordinates(copyBoard, [row, col - 1])) {
       copyBoard[row][col] = "";
       copyBoard[row][col - 1] = "X";
       setBoard(copyBoard);
+      setPosition([row, col - 1]);
     }
   };
 
