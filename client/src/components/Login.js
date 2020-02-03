@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { baseUrl } from "../utils/baseUrl";
+import { baseURL } from "../utils/index";
 
 export default function Login() {
   const { register, handleSubmit, watch, errors } = useForm();
@@ -13,7 +13,7 @@ export default function Login() {
     const testUser = "testuser";
     const testPassword = "testpassword";
     axios
-      .post(`${baseUrl}/api/login/`, {
+      .post(`${baseURL}/api/login/`, {
         username: testUser,
         password: testPassword
       })
