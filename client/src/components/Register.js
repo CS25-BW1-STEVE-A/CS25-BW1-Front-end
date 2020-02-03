@@ -19,7 +19,7 @@ export default function Register() {
       })
       .then(res => {
         console.log(res);
-        localStorage.set("token");
+        localStorage.setItem("token", res.data.key);
       })
       .catch(err => console.log(err));
   };
