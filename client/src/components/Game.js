@@ -20,13 +20,15 @@ const board = [
       name: "The Garden",
       description: "A beautiful garden",
       exits: ["south"],
-      players: []
+      players: [],
+      isChicken: true
     },
     {
       name: "The Kitchen",
       description: "A dank kitchen",
       exits: ["south"],
-      players: []
+      players: [],
+      isChicken: false
     }
   ],
   [
@@ -34,16 +36,21 @@ const board = [
       name: "The Dungeon",
       description: "A beautiful Dungeon",
       exits: ["north", "east"],
-      players: []
+      players: [],
+      isChicken: false
     },
     {
       name: "The Pillar Room",
       description: "A beautiful room",
       exits: ["west", "north"],
-      players: []
+      players: [],
+      isChicken: false
     }
   ]
 ];
+
+//by room, we'll put it somewhere in the middle
+const chickenCoordinates = [0, 0];
 
 export default function() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -82,7 +89,7 @@ export default function() {
   console.log(state.game);
   return (
     <div>
-      <h1>This is the best game</h1>
+      {state.game.isGameOver && <h1>You caught the chicken</h1>}
       <button
         disabled={
           !state.game.isGameStart || state.game.isGameOver ? false : true

@@ -20,6 +20,7 @@ const Cell = styled.div`
 export default function({ colIdx, rowIdx, state }) {
   const door = state.room.board[rowIdx][colIdx] === "Door" ? true : false;
   const wall = state.room.board[rowIdx][colIdx] === "Wall" ? true : false;
+  const chicken = state.room.board[rowIdx][colIdx] === "🐓" ? true : false;
 
   return (
     <Cell className="cell" door={door} wall={wall}>
@@ -27,6 +28,7 @@ export default function({ colIdx, rowIdx, state }) {
       state.player.coordinates[1] === colIdx
         ? "X"
         : ""}
+      {chicken ? "🐓" : ""}
     </Cell>
   );
 }

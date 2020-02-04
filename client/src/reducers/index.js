@@ -22,6 +22,8 @@ function updatePosition(board, direction, currentPosition) {
   //checking if user went into a door
   if (board[newPositionRow][newPositionCol] === "Door") {
     return "Door";
+  } else if (board[newPositionRow][newPositionCol] === "🐓") {
+    return "Game Won";
   } else if (checkCoordinates(board, newPosition)) {
     return newPosition;
   } else {
@@ -42,8 +44,10 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
     "Object in game board of current room",
     gameBoard[newPositionRow][newPositionCol]
   );
+
   //need a new room
   let roomBoard = createRoom(
+    gameBoard[newPositionRow][newPositionCol].isChicken,
     gameBoard[newPositionRow][newPositionCol].exits,
     5
   );
@@ -97,7 +101,7 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
-function createRoom(exits, size) {
+function createRoom(isChicken, exits, size) {
   let board = [];
   //Adding a border of walls or doors
   size += 2;
@@ -112,6 +116,11 @@ function createRoom(exits, size) {
         board[i].push("");
       }
     }
+  }
+
+  //add chicken to middle of board
+  if (isChicken) {
+    board[Math.floor(size / 2)][Math.floor(size / 2)] = "🐓";
   }
 
   // ["east", "west" , "north", "south"]
@@ -160,7 +169,8 @@ export const initialState = {
   room: {
     board: createBoard(5),
     coordinates: [0, 0],
-    name: "Some room"
+    name: "Some room",
+    isChicken: false
   }
 };
 
@@ -189,8 +199,21 @@ export const reducer = (state, action) => {
         roomBoard = result.roomBoard;
       }
 
+      let isGameOver = false;
+      let isGameStart = true;
+
+      if (playerCoordinates === "Game Won") {
+        isGameOver = true;
+        isGameStart = false;
+      }
+
       return {
         ...state,
+        game: {
+          ...state.game,
+          isGameOver: isGameOver,
+          isGameStart: isGameStart
+        },
         player: {
           ...state.player,
           coordinates: playerCoordinates
@@ -203,7 +226,7 @@ export const reducer = (state, action) => {
         }
       };
     case "GAME_START":
-      console.log(action);
+      console.log("starting room", action.startingRoom);
       return {
         ...state,
         game: {
@@ -218,7 +241,11 @@ export const reducer = (state, action) => {
         room: {
           ...state.room,
           ...action.startingRoom,
-          board: createRoom(action.startingRoom.exits, 5)
+          board: createRoom(
+            action.startingRoom.isChicken,
+            action.startingRoom.exits,
+            5
+          )
         }
       };
   }
