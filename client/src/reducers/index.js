@@ -220,7 +220,7 @@ export const reducer = (state, action) => {
         },
         room: {
           ...state.room,
-          name: state.game.board[roomCoordinates[0]][roomCoordinates[1]].name,
+          ...state.game.board[roomCoordinates[0]][roomCoordinates[1]],
           coordinates: roomCoordinates,
           board: roomBoard
         }

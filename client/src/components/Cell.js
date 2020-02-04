@@ -4,16 +4,42 @@ import styled, { css } from "styled-components";
 const Cell = styled.div`
   width: 50px;
   height: 50px;
-  border: 1px solid black;
+  border: 0px solid black;
+  font-size: 2rem;
+
   ${props =>
     props.door &&
     css`
-      background: brown;
+      ${"" /* background: url(${door}); */}
+      background-color: brown;
+      position: relative;
+      &:before {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: black;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     `}
   ${props =>
     props.wall &&
     css`
-      background: black;
+      position: relative;
+      background-color: #ddcbbe;
+
+      &:before {
+        content: "";
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: #985040;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     `}
 `;
 
@@ -26,7 +52,7 @@ export default function({ colIdx, rowIdx, state }) {
     <Cell className="cell" door={door} wall={wall}>
       {state.player.coordinates[0] === rowIdx &&
       state.player.coordinates[1] === colIdx
-        ? "X"
+        ? "🏃‍♀️"
         : ""}
       {chicken ? "🐓" : ""}
     </Cell>
