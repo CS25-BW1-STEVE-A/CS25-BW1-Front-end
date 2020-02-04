@@ -21,12 +21,82 @@ function updatePosition(board, direction, currentPosition) {
 
   //checking if user went into a door
   if (board[newPositionRow][newPositionCol] === "Door") {
-    console.log("user went into a door!");
+    return "Door";
   } else if (checkCoordinates(board, newPosition)) {
     return newPosition;
   } else {
     return currentPosition;
   }
+}
+//Board to help us find next room
+//direction to help us find next room
+//roomCoordinates, so we know where we are
+function updateRoom(gameBoard, direction, roomCoordinates) {
+  //Get the next room's coordinates
+  let newPositionRow = roomCoordinates[0] + VECTORS[direction][0];
+  let newPositionCol = roomCoordinates[1] + VECTORS[direction][1];
+  roomCoordinates = [newPositionRow, newPositionCol];
+
+  console.log(direction);
+  console.log(
+    "Object in game board of current room",
+    gameBoard[newPositionRow][newPositionCol]
+  );
+  //need a new room
+  let roomBoard = createRoom(
+    gameBoard[newPositionRow][newPositionCol].exits,
+    5
+  );
+  let playerCoordinates;
+
+  //make new player coordinates be next to door of new room
+  if (direction == "DOWN") {
+    console.log("are we going south?");
+    //we're at the top, so row = 1, we need to find col that contains door
+    //row = 0 is the border with doors
+    console.log(roomBoard);
+    for (let col = 1; col < roomBoard[0].length - 1; col++) {
+      if (roomBoard[0][col] === "Door") {
+        playerCoordinates = [1, col];
+      }
+    }
+  }
+
+  if (direction == "UP") {
+    //we're at the bottom, so row = roomBoard.length - 2 for the player, we need to find col that contains door
+    //row = roomBoard.length - 1 is the border with doors
+    for (let col = 1; col < roomBoard[0].length - 1; col++) {
+      if (roomBoard[roomBoard.length - 1][col] === "Door") {
+        playerCoordinates = [roomBoard.length - 2, col];
+      }
+    }
+  }
+
+  if (direction == "RIGHT") {
+    //we're at the right, so col = roomBoard[0].length - 2 for the player, we need to find col that contains door
+    //col = roomBoard.length - 1 is the border with doors
+    for (let row = 1; row < roomBoard.length - 1; row++) {
+      if (roomBoard[row][0] === "Door") {
+        playerCoordinates = [row, 1];
+      }
+    }
+  }
+
+  if (direction == "LEFT") {
+    //we're at the left, so col = roomBoard[0].length - 2 for the player, we need to find col that contains door
+    //col = roomBoard.length - 1 is the border with doors
+    for (let row = 1; row < roomBoard.length - 1; row++) {
+      if (roomBoard[row][roomBoard.length - 1] === "Door") {
+        playerCoordinates = [row, roomBoard.length - 2];
+      }
+    }
+  }
+
+  console.log(
+    "the player coordinates being returned from update room are",
+    playerCoordinates
+  );
+  return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
 function createRoom(exits, size) {
@@ -87,6 +157,7 @@ export const initialState = {
     coordinates: [-Infinity, Infinity],
     direction: ""
   },
+  //current room
   room: {
     board: createBoard(5),
     coordinates: [0, 0],
@@ -97,19 +168,39 @@ export const initialState = {
 export const reducer = (state, action) => {
   switch (action.type) {
     case "MOVE_PLAYER":
+      //update position here and if returned door, then update room
+      let roomCoordinates = state.room.coordinates;
+      //player coordinates
+      let roomBoard = state.room.board;
+      let playerCoordinates = updatePosition(
+        state.room.board,
+        action.direction,
+        state.player.coordinates
+      );
+
+      if (playerCoordinates === "Door") {
+        //call update room
+        let result = updateRoom(
+          state.game.board,
+          action.direction,
+          roomCoordinates
+        );
+        playerCoordinates = result.playerCoordinates;
+        roomCoordinates = result.roomCoordinates;
+        roomBoard = result.roomBoard;
+      }
+
       return {
         ...state,
         player: {
           ...state.player,
-          coordinates: updatePosition(
-            state.room.board,
-            action.direction,
-            state.player.coordinates
-          )
+          coordinates: playerCoordinates
         },
         room: {
           ...state.room,
-          coordinates: action.coordinates
+          name: state.game.board[roomCoordinates[0]][roomCoordinates[1]].name,
+          coordinates: roomCoordinates,
+          board: roomBoard
         }
       };
     case "GAME_START":

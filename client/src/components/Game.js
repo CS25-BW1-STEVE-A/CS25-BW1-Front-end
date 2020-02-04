@@ -7,9 +7,9 @@ import { axiosWithAuth, baseURL } from "../utils/index";
 
 //Board we're anticipating from BE
 // const board = [
-//   ["R", "", ""],
-//   ["R", "", ""],
-//   ["R", "R", "R"]
+//   ["Garden", "", ""],
+//   ["Dungeon", "", ""],
+//   ["Crap", "Book", "Eagle"]
 // ];
 
 //now we'll put objects in there
@@ -28,7 +28,7 @@ const board = [
     {
       name: "The Dungeon",
       description: "A dank dungeon",
-      exits: ["south"],
+      exits: ["south", "north"],
       players: []
     },
     "",
@@ -36,7 +36,7 @@ const board = [
   ],
   [
     {
-      name: "The Garden",
+      name: "The crap pile",
       description: "A beautiful garden",
       exits: ["north", "east"],
       players: []
