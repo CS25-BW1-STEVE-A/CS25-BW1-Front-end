@@ -4,6 +4,7 @@ import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
 import { reducer, initialState, KEY_CODES } from "../reducers/index";
 import { axiosWithAuth, baseURL } from "../utils/index";
+import MiniMap from "../components/MiniMap";
 
 //Board we're anticipating from BE
 // const board = [
@@ -91,6 +92,7 @@ export default function() {
         Start Game
       </button>
       <Room state={state} />
+      {state.game.isGameStart && <MiniMap board={state.game.board} />}
     </div>
   );
 }

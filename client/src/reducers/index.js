@@ -51,10 +51,8 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
 
   //make new player coordinates be next to door of new room
   if (direction == "DOWN") {
-    console.log("are we going south?");
     //we're at the top, so row = 1, we need to find col that contains door
     //row = 0 is the border with doors
-    console.log(roomBoard);
     for (let col = 1; col < roomBoard[0].length - 1; col++) {
       if (roomBoard[0][col] === "Door") {
         playerCoordinates = [1, col];
