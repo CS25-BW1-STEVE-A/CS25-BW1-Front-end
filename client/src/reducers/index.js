@@ -169,7 +169,7 @@ export const initialState = {
   room: {
     board: createBoard(5),
     coordinates: [0, 0],
-    name: "Some room",
+    name: "Let's Begin",
     isChicken: false
   }
 };

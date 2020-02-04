@@ -1,11 +1,14 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
+const colors = ["#848484", "#c0c0c0", "#b4b4b4"];
+
 const Cell = styled.div`
   width: 50px;
   height: 50px;
-  border: 0px solid black;
   font-size: 2rem;
+  background-color: #888481;
+  position: relative;
 
   ${props =>
     props.door &&
@@ -40,7 +43,7 @@ const Cell = styled.div`
         left: 50%;
         transform: translate(-50%, -50%);
       }
-    `}
+    `};
 `;
 
 export default function({ colIdx, rowIdx, state }) {

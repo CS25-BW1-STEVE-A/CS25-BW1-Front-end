@@ -21,7 +21,30 @@ const board = [
       description: "A beautiful garden",
       exits: ["south"],
       players: [],
-      isChicken: true
+      isChicken: false
+    },
+    {
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["east"],
+      players: [],
+      isChicken: false
+    },
+    {
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["west", "south"],
+      players: [],
+      isChicken: false
+    }
+  ],
+  [
+    {
+      name: "The Garden",
+      description: "A beautiful garden",
+      exits: ["north", "south"],
+      players: [],
+      isChicken: false
     },
     {
       name: "The Kitchen",
@@ -29,25 +52,51 @@ const board = [
       exits: ["south"],
       players: [],
       isChicken: false
+    },
+    {
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["north", "south"],
+      players: [],
+      isChicken: false
     }
   ],
   [
     {
-      name: "The Dungeon",
-      description: "A beautiful Dungeon",
+      name: "The Garden",
+      description: "A beautiful garden",
       exits: ["north", "east"],
       players: [],
       isChicken: false
     },
     {
-      name: "The Pillar Room",
-      description: "A beautiful room",
-      exits: ["west", "north"],
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["west", "north", "east"],
+      players: [],
+      isChicken: false
+    },
+    {
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["north", "west"],
       players: [],
       isChicken: false
     }
   ]
 ];
+
+/* testing function to randomize chicken */
+function randomChicken(board) {
+  let rows = board.length;
+  let cols = board[0].length;
+
+  let randomRow = Math.floor(Math.random() * rows);
+  let randomCol = Math.floor(Math.random() * cols);
+  board[randomRow][randomCol].isChicken = true;
+}
+
+randomChicken(board);
 
 //by room, we'll put it somewhere in the middle
 const chickenCoordinates = [0, 0];

@@ -6,6 +6,7 @@ import Game from "./components/Game";
 import Layout from "./components/Layout";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import "./App.css";
 
 function App() {
   return (
