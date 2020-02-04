@@ -1,11 +1,18 @@
 import React from "react";
+import styled from "styled-components";
 import NavBar from "./NavBar";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
+  const Main = styled.main`
+    overflow-x: hidden;
+  `;
+
   return (
     <>
       <NavBar />
-      <main>{children}</main>
+      <Main>{children}</Main>
+      <Footer />
     </>
   );
 };
