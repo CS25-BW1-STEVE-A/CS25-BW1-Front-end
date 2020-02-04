@@ -12,14 +12,33 @@ const MapRow = styled.div`
   display: flex;
 `;
 
-export default function MiniMap({ board }) {
+function checkForCurrentRoom(
+  playerRoomRow,
+  playerRoomCol,
+  currentRoomRow,
+  currentRoomCol
+) {
+  return playerRoomRow === currentRoomRow && playerRoomCol === currentRoomCol;
+}
+
+export default function MiniMap({ board, roomCoordinates }) {
   return (
     <Map>
       {board.map((row, rowIdx) => {
         return (
           <MapRow key={rowIdx}>
             {board[rowIdx].map((col, colIdx) => {
-              return <MapCell room={col} />;
+              return (
+                <MapCell
+                  col={col}
+                  isCurrentRoom={checkForCurrentRoom(
+                    roomCoordinates[0],
+                    roomCoordinates[1],
+                    rowIdx,
+                    colIdx
+                  )}
+                />
+              );
             })}
           </MapRow>
         );

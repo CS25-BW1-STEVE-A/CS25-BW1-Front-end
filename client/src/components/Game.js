@@ -92,7 +92,12 @@ export default function() {
         Start Game
       </button>
       <Room state={state} />
-      {state.game.isGameStart && <MiniMap board={state.game.board} />}
+      {state.game.isGameStart && (
+        <MiniMap
+          board={state.game.board}
+          roomCoordinates={state.room.coordinates}
+        />
+      )}
     </div>
   );
 }

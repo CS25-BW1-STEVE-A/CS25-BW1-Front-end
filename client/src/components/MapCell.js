@@ -7,6 +7,12 @@ const Room = styled.div`
   height: 50px;
   
     ${props =>
+      props.isCurrentRoom &&
+      css`
+        background-color: red;
+      `}
+  
+    ${props =>
       props.exits.includes("north") &&
       css`
         border-top: none;
@@ -31,7 +37,6 @@ const Room = styled.div`
       `}
 `;
 
-export default function MapCell({ room }) {
-  console.log("room", room);
-  return <Room exits={room.exits}></Room>;
+export default function MapCell({ col, isCurrentRoom }) {
+  return <Room exits={col.exits} isCurrentRoom={isCurrentRoom}></Room>;
 }
