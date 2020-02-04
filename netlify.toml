@@ -6,3 +6,8 @@
   base = "client/"
   
   publish = "client/public/"
+  
+  # Default build command.
+  command = "echo 'default context'"
+
+
