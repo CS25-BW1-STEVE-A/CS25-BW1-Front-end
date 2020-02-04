@@ -227,21 +227,20 @@ export const reducer = (state, action) => {
       };
     case "GAME_START":
       console.log("starting room", action.startingRoom);
+      console.log("state inside Game_start", state);
       return {
-        ...state,
         game: {
-          ...state.game,
           board: action.gameBoard,
           isGameStart: true,
           isGameOver: false
         },
         player: {
-          ...state.player,
-          coordinates: action.startingPosition
+          coordinates: action.startingPosition,
+          direction: ""
         },
         room: {
-          ...state.room,
           ...action.startingRoom,
+          coordinates: action.roomCoordinates,
           board: createRoom(
             action.startingRoom.isChicken,
             action.startingRoom.exits,

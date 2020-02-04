@@ -17,7 +17,6 @@ export const createBoard = size => {
 export const axiosWithAuth = () => {
   const token = localStorage.getItem("token");
 
-  console.log(token);
   return axios.create({
     baseURL: baseURL,
     headers: {

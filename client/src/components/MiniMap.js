@@ -38,6 +38,7 @@ export default function MiniMap({ board, roomCoordinates }) {
                     rowIdx,
                     colIdx
                   )}
+                  key={colIdx}
                 />
               );
             })}

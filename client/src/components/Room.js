@@ -18,7 +18,14 @@ export default function Room({ state }) {
         return (
           <Row key={rowIdx} className="row">
             {state.room.board[rowIdx].map((col, colIdx) => {
-              return <Cell state={state} colIdx={colIdx} rowIdx={rowIdx} />;
+              return (
+                <Cell
+                  state={state}
+                  key={colIdx}
+                  colIdx={colIdx}
+                  rowIdx={rowIdx}
+                />
+              );
             })}
           </Row>
         );
