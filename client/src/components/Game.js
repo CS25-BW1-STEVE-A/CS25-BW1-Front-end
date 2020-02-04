@@ -21,44 +21,30 @@ const board = [
       exits: ["south"],
       players: []
     },
-    "",
-    ""
+    {
+      name: "The Kitchen",
+      description: "A dank kitchen",
+      exits: ["south"],
+      players: []
+    }
   ],
   [
     {
       name: "The Dungeon",
-      description: "A dank dungeon",
-      exits: ["south", "north"],
-      players: []
-    },
-    "",
-    ""
-  ],
-  [
-    {
-      name: "The crap pile",
-      description: "A beautiful garden",
+      description: "A beautiful Dungeon",
       exits: ["north", "east"],
       players: []
     },
     {
-      name: "The Book",
-      description: "A beautiful book",
-      exits: ["west", "east"],
-      players: []
-    },
-    {
-      name: "The Eagle",
-      description: "A eagle appears",
-      exits: ["west"],
+      name: "The Pillar Room",
+      description: "A beautiful room",
+      exits: ["west", "north"],
       players: []
     }
   ]
 ];
 
 export default function() {
-  const [gameStarted, setGameStarted] = useState(false);
-
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
@@ -81,7 +67,8 @@ export default function() {
   };
 
   const moveCharacter = e => {
-    if (KEY_CODES[e.key]) {
+    console.log(state.game);
+    if (KEY_CODES[e.key] && state.game.isGameStart) {
       //make sure coordinates would work
       dispatch({
         type: "MOVE_PLAYER",
@@ -91,11 +78,18 @@ export default function() {
   };
 
   useEventListener("keydown", moveCharacter);
-
+  console.log(state.game);
   return (
     <div>
       <h1>This is the best game</h1>
-      <button onClick={handleClick}>Start Game</button>
+      <button
+        disabled={
+          !state.game.isGameStart || state.game.isGameOver ? false : true
+        }
+        onClick={handleClick}
+      >
+        Start Game
+      </button>
       <Room state={state} />
     </div>
   );

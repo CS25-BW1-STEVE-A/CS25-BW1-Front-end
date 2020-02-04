@@ -151,7 +151,8 @@ function createRoom(exits, size) {
 export const initialState = {
   game: {
     board: createBoard(10),
-    isGameOver: true
+    isGameOver: false,
+    isGameStart: false
   },
   player: {
     coordinates: [-Infinity, Infinity],
@@ -210,7 +211,7 @@ export const reducer = (state, action) => {
         game: {
           ...state.game,
           board: action.gameBoard,
-          isGameOver: false
+          isGameStart: true
         },
         player: {
           ...state.player,
