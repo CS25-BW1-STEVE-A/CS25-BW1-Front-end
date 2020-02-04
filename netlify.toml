@@ -11,3 +11,6 @@
   # This is where we will look for package.json/.nvmrc/etc.
   base = "client/"
 
+  publish = ""
+  
+  command = "echo 'default context'"
