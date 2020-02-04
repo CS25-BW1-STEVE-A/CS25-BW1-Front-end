@@ -232,7 +232,8 @@ export const reducer = (state, action) => {
         game: {
           ...state.game,
           board: action.gameBoard,
-          isGameStart: true
+          isGameStart: true,
+          isGameOver: false
         },
         player: {
           ...state.player,

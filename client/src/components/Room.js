@@ -14,8 +14,6 @@ const Row = styled.div`
 export default function Room({ state }) {
   return (
     <Board className="board">
-      <h2>{state.room.name}</h2>
-      <h3>{state.room.description}</h3>
       {state.room.board.map((row, rowIdx) => {
         return (
           <Row key={rowIdx} className="row">

@@ -13,7 +13,8 @@ const NavBar = styled.nav`
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
-  color: blue;
+  color: #4e4eb2;
+  font-weight: 700;
 `;
 export default function() {
   return (

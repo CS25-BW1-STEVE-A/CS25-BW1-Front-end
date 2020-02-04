@@ -3,8 +3,9 @@ import styled from "styled-components";
 import MapCell from "./MapCell";
 
 const Map = styled.div`
-  max-width: 150px;
   border: 1px solid green;
+  max-width: 500px;
+  width: 500px;
   margin: 20px auto;
 `;
 

@@ -3,98 +3,36 @@ import axios from "axios";
 import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
 import { reducer, initialState, KEY_CODES } from "../reducers/index";
-import { axiosWithAuth, baseURL } from "../utils/index";
+import { axiosWithAuth, baseURL, board, randomChicken } from "../utils/index";
 import MiniMap from "../components/MiniMap";
+import styled, { css } from "styled-components";
 
-//Board we're anticipating from BE
-// const board = [
-//   ["Garden", "", ""],
-//   ["Dungeon", "", ""],
-//   ["Crap", "Book", "Eagle"]
-// ];
+const Flex = styled.div`
+  display: flex;
 
-//now we'll put objects in there
-const board = [
-  [
-    {
-      name: "The Garden",
-      description: "A beautiful garden",
-      exits: ["south"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["east"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["west", "south"],
-      players: [],
-      isChicken: false
-    }
-  ],
-  [
-    {
-      name: "The Garden",
-      description: "A beautiful garden",
-      exits: ["north", "south"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["south"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["north", "south"],
-      players: [],
-      isChicken: false
-    }
-  ],
-  [
-    {
-      name: "The Garden",
-      description: "A beautiful garden",
-      exits: ["north", "east"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["west", "north", "east"],
-      players: [],
-      isChicken: false
-    },
-    {
-      name: "The Kitchen",
-      description: "A dank kitchen",
-      exits: ["north", "west"],
-      players: [],
-      isChicken: false
-    }
-  ]
-];
+  flex-direction: ${({ flexDirection }) => flexDirection || "row"};
+  justify-content: ${({ justifyContent }) => justifyContent || "flex-start"};
+  align-items: ${({ alignItems }) => alignItems || "flex-start"};
+`;
 
-/* testing function to randomize chicken */
-function randomChicken(board) {
-  let rows = board.length;
-  let cols = board[0].length;
+const Console = styled.div`
+  border: 1px solid black;
+  width: 100%;
+  height: 40px;
+  padding: 5px;
+`;
 
-  let randomRow = Math.floor(Math.random() * rows);
-  let randomCol = Math.floor(Math.random() * cols);
-  board[randomRow][randomCol].isChicken = true;
-}
+const Button = styled.button`
+  border: 2px solid #888481;
+  padding: 1em 2em;
+  font-weight: 700;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  display: ${({ disabled }) => (disabled ? "none" : "inline-block")};
+`;
 
 randomChicken(board);
 
@@ -137,23 +75,33 @@ export default function() {
   useEventListener("keydown", moveCharacter);
   console.log(state.game);
   return (
-    <div>
-      {state.game.isGameOver && <h1>You caught the chicken</h1>}
-      <button
-        disabled={
-          !state.game.isGameStart || state.game.isGameOver ? false : true
-        }
-        onClick={handleClick}
-      >
-        Start Game
-      </button>
-      <Room state={state} />
+    <Flex justifyContent="center">
+      <Flex justifyContent="center" flexDirection="column">
+        {state.game.isGameOver && <h1>You caught the chicken</h1>}
+        <Button
+          disabled={
+            !state.game.isGameStart || state.game.isGameOver ? false : true
+          }
+          onClick={handleClick}
+        >
+          Start Game
+        </Button>
+      </Flex>
       {state.game.isGameStart && (
-        <MiniMap
-          board={state.game.board}
-          roomCoordinates={state.room.coordinates}
-        />
+        <>
+          <Flex flexDirection="column">
+            <Flex flexDirection="row">
+              <Room state={state} />
+              <MiniMap
+                board={state.game.board}
+                roomCoordinates={state.room.coordinates}
+              />
+            </Flex>
+
+            <Console>Message: You suck. And so does your mother.</Console>
+          </Flex>
+        </>
       )}
-    </div>
+    </Flex>
   );
 }
