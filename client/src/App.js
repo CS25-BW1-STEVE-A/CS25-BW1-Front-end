@@ -9,6 +9,15 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 
 const Global = createGlobalStyle` 
+
+/* apply a natural box layout model to all elements, but allowing components to change */
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
   
   body {
     margin: 0;

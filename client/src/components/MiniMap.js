@@ -4,6 +4,8 @@ import MapCell from "./MapCell";
 
 const Map = styled.div`
   max-width: 100%;
+  border: 5px solid #999;
+  border-bottom: 0;
 `;
 
 const MapRow = styled.div`

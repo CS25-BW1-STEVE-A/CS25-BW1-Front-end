@@ -28,6 +28,7 @@ const Console = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border: 5px solid #999;
 `;
 
 const Button = styled.button`
