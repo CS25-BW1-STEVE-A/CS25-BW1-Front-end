@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { baseURL } from "../utils/index";
 import {
@@ -12,26 +13,36 @@ import {
   StyledLink,
   Text
 } from "./Styles";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const { register, handleSubmit, formState, errors } = useForm({
     mode: "onChange"
   });
+
+  let history = useHistory();
+
   const onSubmit = data => {
-    //const username = data.username
-    //const password = data.password
+    const username = data.username;
+    const password = data.password;
 
     //going to do test user etc
-    const testUser = "testuser";
-    const testPassword = "testpassword";
-    axios
-      .post(`${baseURL}/api/login/`, {
-        username: testUser,
-        password: testPassword
-      })
+    // const testUser = "testuser";
+    // const testPassword = "testpassword";
+    axios(`${baseURL}/login/`, {
+      method: "post",
+      data: {
+        username: username,
+        password: password
+      },
+      withCredentials: true
+    })
       .then(res => {
         console.log(res);
+        // console.log(Cookies.get("csrftoken"));
+        // Cookies.set("X-CSRFToken", Cookies.get("csrftoken"));
         localStorage.setItem("token", res.data.key);
+        history.push("/game");
       })
       .catch(err => console.log(err));
   };

@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { baseURL } from "../utils/index";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Background,
@@ -15,6 +16,8 @@ export default function Register() {
   const { register, handleSubmit, formState, errors } = useForm({
     mode: "onChange"
   });
+
+  const history = useHistory();
   const onSubmit = data => {
     const username = data.username;
     const password = data.password;
@@ -31,6 +34,7 @@ export default function Register() {
       .then(res => {
         console.log("register res", res);
         localStorage.setItem("token", res.data.key);
+        history.push("/game");
       })
       .catch(err => console.log(err));
   };
@@ -43,7 +47,7 @@ export default function Register() {
           <StyledInput
             placeholder="Username"
             name="username"
-            ref={register({ required: true })}
+            ref={register({ required: true, minLength: 4 })}
           />
           {errors.username && <Warning>This field is required</Warning>}
 
@@ -51,7 +55,7 @@ export default function Register() {
             placeholder="Password"
             name="password"
             type="password"
-            ref={register({ required: true, minLength: 8 })}
+            ref={register({ required: true, minLength: 9 })}
           />
           {errors.username && <Warning>This field is required</Warning>}
 

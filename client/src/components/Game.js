@@ -53,7 +53,7 @@ export default function() {
 
     // stuff here
     axiosWithAuth()
-      .get(`${baseURL}/api/adv/init`)
+      .get(`${baseURL}/adv/init`)
       .then(res => {
         console.log("axios with auth", res);
         //start game
