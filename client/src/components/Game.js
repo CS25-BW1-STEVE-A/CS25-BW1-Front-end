@@ -67,6 +67,7 @@ export default function() {
 
   const moveCharacter = e => {
     if (KEY_CODES[e.key] && state.game.isGameStart) {
+      e.preventDefault();
       //make sure coordinates would work
       dispatch({
         type: "MOVE_PLAYER",

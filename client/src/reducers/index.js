@@ -102,7 +102,7 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
-function createRoom(isChicken, exits, size) {
+function createRoom(isChicken, exits, size, fakePaths = 2) {
   let board = [];
 
   for (let i = 0; i < size; i++) {
@@ -149,13 +149,15 @@ function createRoom(isChicken, exits, size) {
 
   //We are adding/subtacting 1 on doors in door array to make starting cell directing in fron to the door
 
-  //if 1 door, add on random index to go to and go to that one
-  if (doors.length === 1) {
+  //always add two random fake doors, so there is more space
+  let fakePaths = 2;
+  while (fakePaths > 0) {
     //random between 1 and size - 1 for both indices
     let randomRow = Math.floor(Math.random() * (size - 2)) + 1;
     let randomCol = Math.floor(Math.random() * (size - 2)) + 1;
 
     doors.push([randomRow, randomCol]);
+    fakePaths--;
   }
 
   let chickenStarts = [];
