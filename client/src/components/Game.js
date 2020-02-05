@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
-import { reducer, initialState, KEY_CODES } from "../reducers/index";
-import { axiosWithAuth, baseURL, board, randomChicken } from "../utils/index";
+import { reducer, initialState } from "../reducers/index";
+import { axiosWithAuth, baseURL } from "../utils/index";
+import { board, randomChicken } from "../utils/game";
 import MiniMap from "../components/MiniMap";
 import styled, { css } from "styled-components";
+import { KEY_CODES } from "../utils/player";
 
 const Flex = styled.div`
   display: flex;
@@ -37,14 +39,12 @@ const Button = styled.button`
   display: ${({ disabled }) => (disabled ? "none" : "inline-block")};
 `;
 
-//by room, we'll put it somewhere in the middle
-const chickenCoordinates = [0, 0];
-
 export default function() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
     //Change chicken position
+    console.log(board, "inside handle click");
     randomChicken(board);
 
     // stuff here
@@ -57,9 +57,8 @@ export default function() {
           type: "GAME_START",
           //starting position is for the room
           gameBoard: board,
-          //starting room is which room on the board we're going to start in
-          startingRoom: board[0][0],
-          roomCoordinates: [0, 0]
+          //starting room is which room on the board we're going to start in, which has board, coordinates etc
+          startingRoom: board[0][0]
         });
       })
       .catch(err => console.log("axios with auth", err));
@@ -75,6 +74,8 @@ export default function() {
       });
     }
   };
+
+  console.log("state", state);
 
   useEventListener("keydown", moveCharacter);
 

@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 
-const Room = styled.div`
+const MiniMapRoom = styled.div`
   flex: 1;
   border: 1px solid green;
   height: 50px;
@@ -9,7 +9,7 @@ const Room = styled.div`
     ${props =>
       props.isCurrentRoom &&
       css`
-        background-color: red;
+        background-color: #4e4eb2;
       `}
   
     ${props =>
@@ -37,6 +37,10 @@ const Room = styled.div`
       `}
 `;
 
+//col is an array of cells for the room
 export default function MapCell({ col, isCurrentRoom }) {
-  return <Room exits={col.exits} isCurrentRoom={isCurrentRoom}></Room>;
+  console.log("col inside MiniMap MapCell", col);
+  return (
+    <MiniMapRoom exits={col.exits} isCurrentRoom={isCurrentRoom}></MiniMapRoom>
+  );
 }

@@ -13,6 +13,7 @@ const MapRow = styled.div`
   display: flex;
 `;
 
+//making the room red on the minimap
 function checkForCurrentRoom(
   playerRoomRow,
   playerRoomCol,
