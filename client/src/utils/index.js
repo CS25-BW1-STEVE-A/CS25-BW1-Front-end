@@ -112,5 +112,6 @@ export function randomChicken(board) {
 
   let randomRow = Math.floor(Math.random() * rows);
   let randomCol = Math.floor(Math.random() * cols);
+
   board[randomRow][randomCol].isChicken = true;
 }

@@ -56,7 +56,6 @@ export default function() {
         dispatch({
           type: "GAME_START",
           //starting position is for the room
-          startingPosition: [1, 1],
           gameBoard: board,
           //starting room is which room on the board we're going to start in
           startingRoom: board[0][0],

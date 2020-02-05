@@ -24,10 +24,11 @@ function updatePosition(board, direction, currentPosition) {
     return "Door";
   } else if (board[newPositionRow][newPositionCol] === "🐓") {
     return "Game Won";
-  } else if (checkCoordinates(board, newPosition)) {
-    return newPosition;
-  } else {
+  } else if (board[newPositionRow][newPositionCol] === "Wall") {
     return currentPosition;
+  } else {
+    //It's "" so we can move there
+    return newPosition;
   }
 }
 //Board to help us find next room
@@ -49,7 +50,7 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
   let roomBoard = createRoom(
     gameBoard[newPositionRow][newPositionCol].isChicken,
     gameBoard[newPositionRow][newPositionCol].exits,
-    5
+    10
   );
   let playerCoordinates;
 
@@ -103,32 +104,23 @@ function updateRoom(gameBoard, direction, roomCoordinates) {
 
 function createRoom(isChicken, exits, size) {
   let board = [];
-  //Adding a border of walls or doors
-  size += 2;
 
   for (let i = 0; i < size; i++) {
     board.push([]);
     for (let j = 0; j < size; j++) {
       //Top, bottom, left, and right walls
-      if (i === 0 || i === size - 1 || j === 0 || j === size - 1) {
-        board[i].push("Wall");
-      } else {
-        board[i].push("");
-      }
+      board[i].push("Wall");
     }
   }
 
-  //add chicken to middle of board
-  if (isChicken) {
-    board[Math.floor(size / 2)][Math.floor(size / 2)] = "🐓";
-  }
-
   // ["east", "west" , "north", "south"]
+  let doors = [];
   if (exits.includes("north")) {
     let rowIdx = 0;
     //random number between 1 and 5 inclusively
     let colIdx = Math.floor(Math.random() * (size - 2) + 1);
     board[rowIdx][colIdx] = "Door";
+    doors.push([rowIdx + 1, colIdx]);
   }
 
   if (exits.includes("south")) {
@@ -136,6 +128,7 @@ function createRoom(isChicken, exits, size) {
     //random number between 1 and 5 inclusively
     let colIdx = Math.floor(Math.random() * (size - 2) + 1);
     board[rowIdx][colIdx] = "Door";
+    doors.push([rowIdx - 1, colIdx]);
   }
 
   if (exits.includes("west")) {
@@ -143,6 +136,7 @@ function createRoom(isChicken, exits, size) {
     //random number between 1 and 5 inclusively
     let colIdx = 0;
     board[rowIdx][colIdx] = "Door";
+    doors.push([rowIdx, colIdx + 1]);
   }
 
   if (exits.includes("east")) {
@@ -150,6 +144,72 @@ function createRoom(isChicken, exits, size) {
     //random number between 1 and 5 inclusively
     let colIdx = size - 1;
     board[rowIdx][colIdx] = "Door";
+    doors.push([rowIdx, colIdx - 1]);
+  }
+
+  //We are adding/subtacting 1 on doors in door array to make starting cell directing in fron to the door
+
+  //if 1 door, add on random index to go to and go to that one
+  if (doors.length === 1) {
+    //random between 1 and size - 1 for both indices
+    let randomRow = Math.floor(Math.random() * (size - 2)) + 1;
+    let randomCol = Math.floor(Math.random() * (size - 2)) + 1;
+
+    doors.push([randomRow, randomCol]);
+  }
+
+  let chickenStarts = [];
+  //case of 1 door, 3, and 4 doors
+  while (doors.length > 0) {
+    let startCell = doors.shift();
+    let endCell = doors.shift();
+    //row (up/down), col (left,right)
+    let direction = [0, 0];
+
+    //add in directions we need to
+    direction[0] = endCell[0] - startCell[0];
+    direction[1] = endCell[1] - startCell[1];
+
+    //make starting and end cell empty
+    board[startCell[0]][startCell[1]] = "";
+    board[endCell[0]][endCell[1]] = "";
+    //while directions are not 0's
+    let curCell = startCell;
+
+    while (direction[0] !== 0 || direction[1] !== 0) {
+      //do the first direction first
+      if (direction[0] > 0) {
+        curCell[0]++;
+        direction[0]--;
+      } else if (direction[0] < 0) {
+        curCell[0]--;
+        direction[0]++;
+      } else if (direction[1] > 0) {
+        curCell[1]++;
+        direction[1]--;
+      } else if (direction[1] < 0) {
+        curCell[1]--;
+        direction[1]++;
+      }
+      chickenStarts.push(curCell);
+      board[curCell[0]][curCell[1]] = "    ";
+    }
+
+    //Case of more than 2 doors
+    if (doors.length >= 1) {
+      //unshift one of the two doors on there
+      doors.unshift(endCell);
+    }
+  }
+  console.log(chickenStarts);
+  //add chicken to middle of board
+  if (isChicken) {
+    let startingLocationIndex = Math.floor(
+      Math.random() * chickenStarts.length
+    );
+    let startingLocation = chickenStarts[startingLocationIndex];
+
+    board[startingLocation[0]][startingLocation[1]] = "🐓";
   }
 
   return board;
@@ -173,6 +233,22 @@ export const initialState = {
     isChicken: false
   }
 };
+
+function getStartingCoordinates(board) {
+  let startingChoices = [];
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (board[i][j] === "") {
+        startingChoices.push([i, j]);
+      }
+    }
+  }
+
+  let index = Math.floor(Math.random() * startingChoices.length);
+  console.log(startingChoices);
+  console.log(index);
+  return [startingChoices[index][0], startingChoices[index][1]];
+}
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -225,9 +301,17 @@ export const reducer = (state, action) => {
           board: roomBoard
         }
       };
+
     case "GAME_START":
-      console.log("starting room", action.startingRoom);
-      console.log("state inside Game_start", state);
+      //create a room
+      let startRoomBoard = createRoom(
+        action.startingRoom.isChicken,
+        action.startingRoom.exits,
+        10
+      );
+      console.log(startRoomBoard);
+      //get starting coordinates
+      let startPlayerCoordinates = getStartingCoordinates(startRoomBoard);
       return {
         game: {
           board: action.gameBoard,
@@ -235,17 +319,13 @@ export const reducer = (state, action) => {
           isGameOver: false
         },
         player: {
-          coordinates: action.startingPosition,
+          coordinates: startPlayerCoordinates,
           direction: ""
         },
         room: {
           ...action.startingRoom,
           coordinates: action.roomCoordinates,
-          board: createRoom(
-            action.startingRoom.isChicken,
-            action.startingRoom.exits,
-            5
-          )
+          board: startRoomBoard
         }
       };
   }
