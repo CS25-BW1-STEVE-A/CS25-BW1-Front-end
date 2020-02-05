@@ -16,19 +16,20 @@ export default function Register() {
     mode: "onChange"
   });
   const onSubmit = data => {
-    //const username = data.username
-    //const password = data.password
+    const username = data.username;
+    const password = data.password;
 
     //going to do test user etc
-    const testUser = "testuser";
-    const testPassword = "testpassword";
+    // const testUser = "testuser";
+    // const testPassword = "testpassword";
     axios
-      .post(`${baseURL}/api/login/`, {
-        username: testUser,
-        password: testPassword
+      .post(`${baseURL}/registration/`, {
+        username: username,
+        password1: password,
+        password2: password
       })
       .then(res => {
-        console.log(res);
+        console.log("register res", res);
         localStorage.setItem("token", res.data.key);
       })
       .catch(err => console.log(err));
@@ -49,7 +50,8 @@ export default function Register() {
           <StyledInput
             placeholder="Password"
             name="password"
-            ref={register({ required: true })}
+            type="password"
+            ref={register({ required: true, minLength: 8 })}
           />
           {errors.username && <Warning>This field is required</Warning>}
 

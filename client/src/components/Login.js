@@ -51,6 +51,7 @@ export default function Login() {
           <StyledInput
             name="password"
             placeholder="Password"
+            type="password"
             ref={register({ required: true })}
           />
           {errors.username && <Warning>This field is required</Warning>}
