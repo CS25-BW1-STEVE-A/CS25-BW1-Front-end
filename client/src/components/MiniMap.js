@@ -3,42 +3,28 @@ import styled from "styled-components";
 import MapCell from "./MapCell";
 
 const Map = styled.div`
-  border: 1px solid green;
-  max-width: 500px;
-  width: 500px;
-  margin: 20px auto;
+  max-width: 100%;
+  border: 5px solid #999;
+  border-bottom: 0;
 `;
 
 const MapRow = styled.div`
   display: flex;
 `;
 
-function checkForCurrentRoom(
-  playerRoomRow,
-  playerRoomCol,
-  currentRoomRow,
-  currentRoomCol
-) {
-  return playerRoomRow === currentRoomRow && playerRoomCol === currentRoomCol;
-}
-
-export default function MiniMap({ board, roomCoordinates }) {
+export default function MiniMap({ state }) {
   return (
     <Map>
-      {board.map((row, rowIdx) => {
+      {state.game.board.map((row, rowIdx) => {
         return (
           <MapRow key={rowIdx}>
-            {board[rowIdx].map((col, colIdx) => {
+            {state.game.board[rowIdx].map((col, colIdx) => {
               return (
                 <MapCell
+                  roomCoordinates={[rowIdx, colIdx]}
                   col={col}
-                  isCurrentRoom={checkForCurrentRoom(
-                    roomCoordinates[0],
-                    roomCoordinates[1],
-                    rowIdx,
-                    colIdx
-                  )}
                   key={colIdx}
+                  state={state}
                 />
               );
             })}

@@ -2,27 +2,33 @@ import React, { useState } from "react";
 import axios from "axios";
 import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
-import { reducer, initialState, KEY_CODES } from "../reducers/index";
-import { axiosWithAuth, baseURL, board, randomChicken } from "../utils/index";
+import { reducer, initialState } from "../reducers/index";
+import { axiosWithAuth, baseURL } from "../utils/index";
+import { board, randomChicken } from "../utils/game";
 import MiniMap from "../components/MiniMap";
 import styled, { css } from "styled-components";
+import { KEY_CODES } from "../utils/player";
 
 const Flex = styled.div`
   display: flex;
+
   margin: ${({ margin }) => margin || "0px"};
+  flex-wrap: ${({ flexWrap }) => flexWrap || "nowrap"};
   flex-direction: ${({ flexDirection }) => flexDirection || "row"};
   justify-content: ${({ justifyContent }) => justifyContent || "flex-start"};
   align-items: ${({ alignItems }) => alignItems || "flex-start"};
 `;
 
 const Console = styled.div`
-  border: 1px solid black;
   width: 100%;
-  height: 25%;
-  padding: 5px;
-  overflow-y: scroll;
   background: black;
   color: #00ff00;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border: 5px solid #999;
 `;
 
 const Button = styled.button`
@@ -37,14 +43,12 @@ const Button = styled.button`
   display: ${({ disabled }) => (disabled ? "none" : "inline-block")};
 `;
 
-//by room, we'll put it somewhere in the middle
-const chickenCoordinates = [0, 0];
-
 export default function() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
     //Change chicken position
+    console.log(board, "inside handle click");
     randomChicken(board);
 
     // stuff here
@@ -56,11 +60,9 @@ export default function() {
         dispatch({
           type: "GAME_START",
           //starting position is for the room
-          startingPosition: [1, 1],
           gameBoard: board,
-          //starting room is which room on the board we're going to start in
-          startingRoom: board[0][0],
-          roomCoordinates: [0, 0]
+          //starting room is which room on the board we're going to start in, which has board, coordinates etc
+          startingRoom: board[0][0]
         });
       })
       .catch(err => console.log("axios with auth", err));
@@ -68,6 +70,7 @@ export default function() {
 
   const moveCharacter = e => {
     if (KEY_CODES[e.key] && state.game.isGameStart) {
+      e.preventDefault();
       //make sure coordinates would work
       dispatch({
         type: "MOVE_PLAYER",
@@ -75,6 +78,8 @@ export default function() {
       });
     }
   };
+
+  console.log("state", state);
 
   useEventListener("keydown", moveCharacter);
 
@@ -93,19 +98,15 @@ export default function() {
       </Flex>
       {state.game.isGameStart && (
         <>
-          <Flex flexDirection="column">
-            <Flex flexDirection="row">
-              <Room state={state} />
-              <MiniMap
-                board={state.game.board}
-                roomCoordinates={state.room.coordinates}
-              />
+          <Flex flexDirection="row" alignItems="normal">
+            <Room state={state} />
+            <Flex justifyContent="space-between" flexDirection="column">
+              <MiniMap state={state} />
+              <Console>
+                <p>You have entered {state.room.name}</p>
+                <p>{state.room.description}</p>
+              </Console>
             </Flex>
-
-            <Console>
-              <p>You have entered {state.room.name}</p>
-              <p>{state.room.description}</p>
-            </Console>
           </Flex>
         </>
       )}
