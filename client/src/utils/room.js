@@ -15,11 +15,9 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
     gameBoard[newPositionRow][newPositionCol]
   );
 
-  //need a new room
-  let roomBoard = createRoom(
-    gameBoard[newPositionRow][newPositionCol].isChicken,
-    gameBoard[newPositionRow][newPositionCol].exits
-  );
+  //need the next room
+  let roomBoard = gameBoard[newPositionRow][newPositionCol].board;
+  console.log(roomBoard, "inside of updateROOM");
   let playerCoordinates;
 
   //make new player coordinates be next to door of new room
@@ -63,10 +61,6 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
     }
   }
 
-  console.log(
-    "the player coordinates being returned from update room are",
-    playerCoordinates
-  );
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 

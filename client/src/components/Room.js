@@ -3,8 +3,7 @@ import styled from "styled-components";
 import Cell from "./Cell";
 
 const Board = styled.div`
-  max-width: 500px;
-  margin: 20px auto;
+  margin: 0px auto;
 `;
 
 const Row = styled.div`

@@ -11,20 +11,23 @@ import { KEY_CODES } from "../utils/player";
 
 const Flex = styled.div`
   display: flex;
+
   margin: ${({ margin }) => margin || "0px"};
+  flex-wrap: ${({ flexWrap }) => flexWrap || "nowrap"};
   flex-direction: ${({ flexDirection }) => flexDirection || "row"};
   justify-content: ${({ justifyContent }) => justifyContent || "flex-start"};
   align-items: ${({ alignItems }) => alignItems || "flex-start"};
 `;
 
 const Console = styled.div`
-  border: 1px solid black;
   width: 100%;
-  height: 25%;
-  padding: 5px;
-  overflow-y: scroll;
   background: black;
   color: #00ff00;
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const Button = styled.button`
@@ -94,19 +97,15 @@ export default function() {
       </Flex>
       {state.game.isGameStart && (
         <>
-          <Flex flexDirection="column">
-            <Flex flexDirection="row">
-              <Room state={state} />
-              <MiniMap
-                board={state.game.board}
-                roomCoordinates={state.room.coordinates}
-              />
+          <Flex flexDirection="row" alignItems="normal">
+            <Room state={state} />
+            <Flex justifyContent="space-between" flexDirection="column">
+              <MiniMap state={state} />
+              <Console>
+                <p>You have entered {state.room.name}</p>
+                <p>{state.room.description}</p>
+              </Console>
             </Flex>
-
-            <Console>
-              <p>You have entered {state.room.name}</p>
-              <p>{state.room.description}</p>
-            </Console>
           </Flex>
         </>
       )}

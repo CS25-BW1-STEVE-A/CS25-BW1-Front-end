@@ -1,46 +1,45 @@
 import React from "react";
+import MiniMapPlayerCell from "./MiniMapPlayerCell";
 import styled, { css } from "styled-components";
 
 const MiniMapRoom = styled.div`
-  flex: 1;
-  border: 1px solid green;
-  height: 50px;
-  
-    ${props =>
-      props.isCurrentRoom &&
-      css`
-        background-color: #4e4eb2;
-      `}
-  
-    ${props =>
-      props.exits.includes("north") &&
-      css`
-        border-top: none;
-      `}
-
-    ${props =>
-      props.exits.includes("south") &&
-      css`
-        border-bottom: none;
-      `}
-
-    ${props =>
-      props.exits.includes("west") &&
-      css`
-        border-left: none;
-      `}
-
-    ${props =>
-      props.exits.includes("east") &&
-      css`
-        border-right: none;
-      `}
+  /*  */
 `;
 
+const Row = styled.div`
+  display: flex;
+`;
+
+//styled components
+//Board, Row
+//actual components
+//MiniMapPlayerCell
+
 //col is an array of cells for the room
-export default function MapCell({ col, isCurrentRoom }) {
-  console.log("col inside MiniMap MapCell", col);
+export default function MapCell({ col, state, roomCoordinates }) {
+  const roomBoard = col.board;
   return (
-    <MiniMapRoom exits={col.exits} isCurrentRoom={isCurrentRoom}></MiniMapRoom>
+    //Maybe highlight room with a color?
+    <MiniMapRoom exits={col.exits}>
+      {roomBoard.map((row, rowIdx) => {
+        return (
+          <Row key={rowIdx}>
+            {roomBoard[rowIdx].map((col, colIdx) => {
+              //Pass col to tell if it's a wall, door, nothing or person
+              return (
+                <MiniMapPlayerCell
+                  key={colIdx}
+                  colIdx={colIdx}
+                  rowIdx={rowIdx}
+                  col={col}
+                  state={state}
+                  roomCoordinates={roomCoordinates}
+                />
+              );
+            })}
+          </Row>
+        );
+      })}
+    </MiniMapRoom>
   );
 }
