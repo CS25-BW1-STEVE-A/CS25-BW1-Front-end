@@ -64,9 +64,9 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
-export function createRoom(isChicken, exits, size = 10, fakePaths = 2) {
+function createEmptyBoard(size) {
   let board = [];
-
+  //making board empty ie all walls
   for (let i = 0; i < size; i++) {
     board.push([]);
     for (let j = 0; j < size; j++) {
@@ -74,39 +74,107 @@ export function createRoom(isChicken, exits, size = 10, fakePaths = 2) {
       board[i].push("Wall");
     }
   }
+  return board;
+}
 
-  // ["east", "west" , "north", "south"]
-  let doors = [];
-  if (exits.includes("north")) {
-    let rowIdx = 0;
-    //random number between 1 and 5 inclusively
-    let colIdx = Math.floor(Math.random() * (size - 2) + 1);
-    board[rowIdx][colIdx] = "Door";
-    doors.push([rowIdx + 1, colIdx]);
+export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
+  //Make board full of walls
+  let roomBoard = createEmptyBoard(size);
+
+  let doorEntrances = [];
+
+  // exits: {north: [], south: [], etc}
+  if (room.exits.north) {
+    let doorCoordinates = [null, null];
+    //get the north room and check if it's been visited
+    let foundRoom = gameBoard[room.coordinates[0] - 1][room.coordinates[1]];
+    if (foundRoom.visited) {
+      //exits: [{"south": [0,1]}]
+      //for north, we want the col value, index 1
+      //we want to coordinate of the first spot below the door
+      doorCoordinates[0] = 0;
+      doorCoordinates[1] = foundRoom.exits.south[1];
+    } else {
+      doorCoordinates[0] = 0;
+      doorCoordinates[1] = Math.floor(Math.random() * (size - 2) + 1);
+    }
+
+    //add door coordinates to this room's exits
+    room.exits.north = doorCoordinates;
+
+    //when we change the board, we want the actual cell of the door
+    roomBoard[doorCoordinates[0]][doorCoordinates[1]] = "Door";
+    //add 1 to row for entrance below north door
+    doorEntrances.push([doorCoordinates[0] + 1, doorCoordinates[1]]);
   }
 
-  if (exits.includes("south")) {
-    let rowIdx = size - 1;
-    //random number between 1 and 5 inclusively
-    let colIdx = Math.floor(Math.random() * (size - 2) + 1);
-    board[rowIdx][colIdx] = "Door";
-    doors.push([rowIdx - 1, colIdx]);
+  if (room.exits.south) {
+    let doorCoordinates = [null, null];
+    //get the north room and check if it's been visited
+    let foundRoom = gameBoard[room.coordinates[0] + 1][room.coordinates[1]];
+    if (foundRoom.visited) {
+      //exits: [{"north": [0,1]}]
+      //for north, we want the col value, index 1
+      //we want to coordinate of the first spot above the door
+      doorCoordinates[0] = size - 1;
+      doorCoordinates[1] = foundRoom.exits.north[1];
+    } else {
+      doorCoordinates[0] = size - 1;
+      doorCoordinates[1] = Math.floor(Math.random() * (size - 2) + 1);
+    }
+
+    //add door coordinates to this room's exits
+    room.exits.south = doorCoordinates;
+
+    roomBoard[doorCoordinates[0]][doorCoordinates[1]] = "Door";
+    //row - 1 to have the entrance be above the door
+    doorEntrances.push([doorCoordinates[0] - 1, doorCoordinates[1]]);
   }
 
-  if (exits.includes("west")) {
-    let rowIdx = Math.floor(Math.random() * (size - 2) + 1);
-    //random number between 1 and 5 inclusively
-    let colIdx = 0;
-    board[rowIdx][colIdx] = "Door";
-    doors.push([rowIdx, colIdx + 1]);
+  if (room.exits.east) {
+    let doorCoordinates = [null, null];
+    //get the north room and check if it's been visited
+    let foundRoom = gameBoard[room.coordinates[0]][room.coordinates[1] + 1];
+    if (foundRoom.visited) {
+      //exits: [{"west": [0,1]}]
+      //for west, we want the col value, index 1
+      //we want to coordinate of the first spot left of the door
+      doorCoordinates[0] = foundRoom.exits.west[0];
+      doorCoordinates[1] = size - 1;
+    } else {
+      doorCoordinates[0] = Math.floor(Math.random() * (size - 2) + 1);
+      doorCoordinates[1] = size - 1;
+    }
+
+    //add door coordinates to this room's exits
+    room.exits.east = doorCoordinates;
+
+    roomBoard[doorCoordinates[0]][doorCoordinates[1]] = "Door";
+    //the entrance will be to the left, so col - 1
+    doorEntrances.push([doorCoordinates[0], doorCoordinates[1] - 1]);
   }
 
-  if (exits.includes("east")) {
-    let rowIdx = Math.floor(Math.random() * (size - 2) + 1);
-    //random number between 1 and 5 inclusively
-    let colIdx = size - 1;
-    board[rowIdx][colIdx] = "Door";
-    doors.push([rowIdx, colIdx - 1]);
+  if (room.exits.west) {
+    let doorCoordinates = [null, null];
+    //get the north room and check if it's been visited
+    let foundRoom = gameBoard[room.coordinates[0]][room.coordinates[1] - 1];
+    if (foundRoom.visited) {
+      //exits: [{"east": [0,1]}]
+      //for east, we want the col value, index 1
+      //we want to coordinate of the first spot right of the door
+      doorCoordinates[0] = foundRoom.exits.east[0];
+      doorCoordinates[1] = 0;
+    } else {
+      doorCoordinates[0] = Math.floor(Math.random() * (size - 2) + 1);
+      doorCoordinates[1] = 0;
+    }
+
+    //add door coordinates to this room's exits
+    room.exits.west = doorCoordinates;
+
+    roomBoard[doorCoordinates[0]][doorCoordinates[1]] = "Door";
+    //an entrance should be in the col + 1
+    doorEntrances.push([doorCoordinates[0], doorCoordinates[1] + 1]);
   }
 
   //We are adding/subtacting 1 on doors in door array to make starting cell directing in fron to the door
@@ -117,15 +185,16 @@ export function createRoom(isChicken, exits, size = 10, fakePaths = 2) {
     let randomRow = Math.floor(Math.random() * (size - 2)) + 1;
     let randomCol = Math.floor(Math.random() * (size - 2)) + 1;
 
-    doors.push([randomRow, randomCol]);
+    doorEntrances.push([randomRow, randomCol]);
     fakePaths--;
   }
 
   let chickenStarts = [];
+  console.log("doors", doorEntrances);
   //case of 1 door, 3, and 4 doors
-  while (doors.length > 0) {
-    let startCell = doors.shift();
-    let endCell = doors.shift();
+  while (doorEntrances.length > 0) {
+    let startCell = doorEntrances.shift();
+    let endCell = doorEntrances.shift();
     //row (up/down), col (left,right)
     let direction = [0, 0];
 
@@ -134,8 +203,8 @@ export function createRoom(isChicken, exits, size = 10, fakePaths = 2) {
     direction[1] = endCell[1] - startCell[1];
 
     //make starting and end cell empty
-    board[startCell[0]][startCell[1]] = "";
-    board[endCell[0]][endCell[1]] = "";
+    roomBoard[startCell[0]][startCell[1]] = "";
+    roomBoard[endCell[0]][endCell[1]] = "";
     //while directions are not 0's
     let curCell = startCell;
 
@@ -155,25 +224,26 @@ export function createRoom(isChicken, exits, size = 10, fakePaths = 2) {
         direction[1]++;
       }
       chickenStarts.push(curCell);
-      board[curCell[0]][curCell[1]] = "    ";
+      roomBoard[curCell[0]][curCell[1]] = "    ";
     }
 
     //Case of more than 2 doors
-    if (doors.length >= 1) {
+    if (doorEntrances.length >= 1) {
       //unshift one of the two doors on there
-      doors.unshift(endCell);
+      doorEntrances.unshift(endCell);
     }
   }
-  console.log(chickenStarts);
   //add chicken to middle of board
-  if (isChicken) {
+  if (room.isChicken) {
     let startingLocationIndex = Math.floor(
       Math.random() * chickenStarts.length
     );
     let startingLocation = chickenStarts[startingLocationIndex];
 
-    board[startingLocation[0]][startingLocation[1]] = "🐓";
+    roomBoard[startingLocation[0]][startingLocation[1]] = "🐓";
   }
 
-  return board;
+  room.board = roomBoard;
+
+  return room;
 }

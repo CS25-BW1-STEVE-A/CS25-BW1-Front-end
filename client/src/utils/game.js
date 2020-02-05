@@ -12,7 +12,7 @@ export const createBoard = size => {
 };
 
 //now we'll put objects in there
-const oldBoard = [
+export let board = [
   [
     {
       name: "The Garden",
@@ -84,12 +84,30 @@ const oldBoard = [
   ]
 ];
 
-export let board = oldBoard.map((row, rowIdx) => {
-  return oldBoard[rowIdx].map((room, roomIdx) => {
+board.forEach((row, rowIdx) => {
+  board[rowIdx].forEach((room, colIdx) => {
     let newRoom = { ...room };
-    newRoom.board = createRoom(newRoom.isChicken, newRoom.exits);
-    newRoom.coordinates = [rowIdx, roomIdx];
-    return newRoom;
+
+    // let adjacentRooms = getAdjacentRooms(board, rowIdx, colIdx);
+
+    //new room board and new exits containing coordinates for those exits as well
+    newRoom.coordinates = [rowIdx, colIdx];
+    newRoom.visited = true;
+    //newRoom we need coordinates to find adj rooms
+    //newRoom we need chicken
+
+    //make exits like {exits: north: [], east: []}
+    let tempExitObj = {};
+    let tempRoomExits = [...room.exits];
+    for (let exitDirection of tempRoomExits) {
+      tempExitObj[exitDirection] = [];
+    }
+    newRoom.exits = tempExitObj;
+    let createdRoom = createRoom(board, newRoom);
+    newRoom.board = createdRoom.board;
+    console.log("newroom", newRoom);
+
+    board[rowIdx][colIdx] = newRoom;
   });
 });
 
