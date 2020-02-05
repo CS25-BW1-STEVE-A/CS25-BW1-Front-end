@@ -6,6 +6,9 @@ import Footer from "./Footer";
 const Layout = ({ children }) => {
   const Main = styled.main`
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   `;
 
   return (

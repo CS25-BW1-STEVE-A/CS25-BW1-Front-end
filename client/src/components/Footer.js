@@ -11,6 +11,8 @@ const FooterStyled = styled.footer`
 
 export default function Footer() {
   return (
-    <FooterStyled>Tomatoe Pie Coders &copy; {date.getFullYear()}</FooterStyled>
+    <FooterStyled>
+      <p>Tomatoe Pie Coders &copy; {date.getFullYear()}</p>
+    </FooterStyled>
   );
 }
