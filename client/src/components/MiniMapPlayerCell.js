@@ -8,7 +8,7 @@ export const MiniMapCell = styled.div`
     if (col === "Wall") {
       return "black";
     } else if (col === "Door") {
-      return "brown";
+      return "white";
     } else if (checkForCurrentCell) {
       return "red";
     } else {
