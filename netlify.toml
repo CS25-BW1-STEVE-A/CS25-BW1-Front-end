@@ -6,6 +6,6 @@
   base = "client/"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "client/*"
+  to = "client/index.html"
   status = 200
