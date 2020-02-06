@@ -48,7 +48,7 @@ export default function() {
 
   const handleClick = () => {
     // stuff here
-    let size = 3;
+    let size = 10;
     axiosWithAuth()
       // .get(`${baseURL}/adv/init`)
       .get(`http://localhost:5000/maze/${size}`)

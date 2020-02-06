@@ -30,13 +30,13 @@ export default function MiniMap({ state }) {
     //if i < 0, add before, if i > board.length - 1, add to end, otherwise take the row from teh board
     if (i < 0) {
       let emptyArray = [];
-      for (let i = 0; i < board[0].length; i++) {
+      for (let i = 0; i < state.game.board.length; i++) {
         emptyArray.push(createEmptyRoom(state.room.board.length));
       }
       boardWithCroppedRows.push(emptyArray);
     } else if (i > board.length - 1) {
       let emptyArray = [];
-      for (let i = 0; i < board[0].length; i++) {
+      for (let i = 0; i < state.game.board.length; i++) {
         emptyArray.push(createEmptyRoom(state.room.board.length));
       }
       boardWithCroppedRows.push(emptyArray);
@@ -45,28 +45,27 @@ export default function MiniMap({ state }) {
     }
   }
 
+  console.log(boardWithCroppedRows);
+
   let boardWithCroppedCols = [];
-  for (let row of boardWithCroppedRows) {
-    //for loop for columns that i want
-    let tempRow = [...row];
+  let tempRow;
+  for (let r = 0; r < boardWithCroppedRows.length; r++) {
+    tempRow = [];
+    //loop from 1 left of room to one right of roomo
     for (
-      let i = state.room.coordinates[1] - 1;
-      i < state.room.coordinates[1] + 2;
-      i++
+      let c = state.room.coordinates[1] - 1;
+      c < state.room.coordinates[1] + 2;
+      c++
     ) {
-      //if i < 0, add before given row at the colIdx and remove last, if i > length junk, add to last remove first
-      if (i < 0) {
-        console.log("negative i", tempRow);
-        //Adding an empty room to the beginning of the row
-        tempRow.unshift(createEmptyRoom(state.room.board.length));
-        //remove the last value from the row
-        tempRow.pop();
-        console.log("negative i", tempRow);
-      } else if (i > tempRow.length - 1) {
-        //add an empty room to the end of the row
+      if (c < 0) {
+        //off teh board left
         tempRow.push(createEmptyRoom(state.room.board.length));
-        //remove the beginning value from the row
-        tempRow.shift();
+      } else if (c > state.game.board.length - 1) {
+        //off the board right
+        tempRow.push(createEmptyRoom(state.room.board.length));
+      } else {
+        //It's on the board already
+        tempRow.push(boardWithCroppedRows[r][c]);
       }
     }
     boardWithCroppedCols.push(tempRow);
@@ -82,7 +81,7 @@ export default function MiniMap({ state }) {
         return (
           <MapRow key={rowIdx}>
             {board[rowIdx].map((col, colIdx) => {
-              //empty rooms don't have coordinates, does that matter inside
+              console.log("roomCoordinates", col);
               return (
                 <MapCell
                   roomCoordinates={[col.coordinates[0], col.coordinates[1]]}

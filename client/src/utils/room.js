@@ -73,7 +73,7 @@ export function createEmptyBoard(size) {
 
 export function createEmptyRoom(size) {
   let board = createEmptyBoard(size);
-  let room = { board: board, coordinates: [uuidv1(), uuidv1()] };
+  let room = { board: board, coordinates: [uuidv1(), uuidv1()], name: "EMPTY" };
   return room;
 }
 
