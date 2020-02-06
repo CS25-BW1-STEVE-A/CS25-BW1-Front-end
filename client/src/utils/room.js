@@ -88,6 +88,8 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
     let doorCoordinates = [null, null];
     //get the north room and check if it's been visited
     let foundRoom = gameBoard[room.coordinates[0] - 1][room.coordinates[1]];
+    console.log("current room", room);
+    console.log("found room", foundRoom);
     if (foundRoom.visited) {
       //exits: [{"south": [0,1]}]
       //for north, we want the col value, index 1
@@ -112,6 +114,8 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
     let doorCoordinates = [null, null];
     //get the north room and check if it's been visited
     let foundRoom = gameBoard[room.coordinates[0] + 1][room.coordinates[1]];
+    console.log("current room", room);
+    console.log("found room", foundRoom);
     if (foundRoom.visited) {
       //exits: [{"north": [0,1]}]
       //for north, we want the col value, index 1

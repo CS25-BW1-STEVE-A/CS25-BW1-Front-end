@@ -31,6 +31,7 @@ export function updatePosition(board, direction, currentPosition) {
 }
 
 export function getStartingCoordinates(board) {
+  console.log("get starting coordinates", board);
   let startingChoices = [];
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {

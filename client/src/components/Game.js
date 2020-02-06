@@ -4,7 +4,7 @@ import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
 import { reducer, initialState } from "../reducers/index";
 import { axiosWithAuth, baseURL } from "../utils/index";
-import { board, randomChicken } from "../utils/game";
+import { addRoomsToBoard, randomChicken } from "../utils/game";
 import MiniMap from "../components/MiniMap";
 import styled, { css } from "styled-components";
 import { KEY_CODES } from "../utils/player";
@@ -47,15 +47,15 @@ export default function() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
-    //Change chicken position
-    console.log(board, "inside handle click");
-    randomChicken(board);
-
     // stuff here
+    let size = 3;
     axiosWithAuth()
-      .get(`${baseURL}/adv/init`)
+      // .get(`${baseURL}/adv/init`)
+      .get(`http://localhost:5000/maze/${size}`)
       .then(res => {
-        console.log("axios with auth", res);
+        console.log(res.data);
+        let board = res.data;
+        addRoomsToBoard(board);
         //start game
         dispatch({
           type: "GAME_START",

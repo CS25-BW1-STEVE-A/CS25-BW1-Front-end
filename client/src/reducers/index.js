@@ -1,11 +1,10 @@
 import { createRoom, updateRoom } from "../utils/room";
 import { updatePosition, getStartingCoordinates } from "../utils/player";
-import { createBoard } from "../utils/game";
 
 //maybe dont' need this?
 export const initialState = {
   game: {
-    board: createBoard(10),
+    board: [],
     isGameOver: false,
     isGameStart: false
   },
@@ -15,7 +14,7 @@ export const initialState = {
   },
   //current room
   room: {
-    board: createBoard(5),
+    board: [],
     coordinates: [0, 0],
     name: "Let's Begin",
     isChicken: false
