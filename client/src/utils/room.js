@@ -1,4 +1,5 @@
 import { VECTORS } from "./player";
+const uuidv1 = require("uuid/v1");
 
 //Board to help us find next room
 //direction to help us find next room
@@ -57,7 +58,7 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
-function createEmptyBoard(size) {
+export function createEmptyBoard(size) {
   let board = [];
   //making board empty ie all walls
   for (let i = 0; i < size; i++) {
@@ -68,6 +69,12 @@ function createEmptyBoard(size) {
     }
   }
   return board;
+}
+
+export function createEmptyRoom(size) {
+  let board = createEmptyBoard(size);
+  let room = { board: board, coordinates: [uuidv1(), uuidv1()] };
+  return room;
 }
 
 export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {

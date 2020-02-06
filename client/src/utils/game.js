@@ -2,7 +2,6 @@ import { createRoom } from "./room";
 import axios from "axios";
 
 export function addRoomsToBoard(board) {
-  console.log("addroomstoboard", board);
   board.forEach((row, rowIdx) => {
     board[rowIdx].forEach((room, colIdx) => {
       let newRoom = { ...room };

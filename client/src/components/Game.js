@@ -53,7 +53,6 @@ export default function() {
       // .get(`${baseURL}/adv/init`)
       .get(`http://localhost:5000/maze/${size}`)
       .then(res => {
-        console.log(res.data);
         let board = res.data;
         addRoomsToBoard(board);
         //start game
@@ -78,8 +77,6 @@ export default function() {
       });
     }
   };
-
-  console.log("state", state);
 
   useEventListener("keydown", moveCharacter);
 

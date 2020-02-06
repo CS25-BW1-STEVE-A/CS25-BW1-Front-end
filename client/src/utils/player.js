@@ -31,7 +31,6 @@ export function updatePosition(board, direction, currentPosition) {
 }
 
 export function getStartingCoordinates(board) {
-  console.log("get starting coordinates", board);
   let startingChoices = [];
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[i].length; j++) {
@@ -42,7 +41,5 @@ export function getStartingCoordinates(board) {
   }
 
   let index = Math.floor(Math.random() * startingChoices.length);
-  console.log(startingChoices);
-  console.log(index);
   return [startingChoices[index][0], startingChoices[index][1]];
 }

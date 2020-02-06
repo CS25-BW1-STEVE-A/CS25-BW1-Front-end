@@ -52,25 +52,19 @@ export default function MiniMapPlayerCell({
   state,
   roomCoordinates
 }) {
-  if (
-    checkForCurrentCell(
-      state.player.coordinates,
-      [rowIdx, colIdx],
-      roomCoordinates,
-      state.room.coordinates
-    )
-  ) {
-    console.log("inside MiniMapPlayerCell");
-  }
   return (
     <MiniMapCell
       col={col}
-      checkForCurrentCell={checkForCurrentCell(
-        state.player.coordinates,
-        [rowIdx, colIdx],
-        roomCoordinates,
-        state.room.coordinates
-      )}
+      checkForCurrentCell={
+        roomCoordinates[0] === null
+          ? false
+          : checkForCurrentCell(
+              state.player.coordinates,
+              [rowIdx, colIdx],
+              roomCoordinates,
+              state.room.coordinates
+            )
+      }
     >
       {}
     </MiniMapCell>
