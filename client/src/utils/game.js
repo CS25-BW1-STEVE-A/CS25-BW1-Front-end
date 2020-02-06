@@ -9,6 +9,8 @@ export function addRoomsToBoard(board) {
 
       //new room board and new exits containing coordinates for those exits as well
       newRoom.coordinates = [rowIdx, colIdx];
+      newRoom.visited = true;
+      //giving the room visited is true - inside create room, if a next room hasn't been visited, we can give the current room a random door
 
       //current exits is like exits: ["north", "west"]
       //make exits like {exits: north: [], east: []}
@@ -18,9 +20,9 @@ export function addRoomsToBoard(board) {
         tempExitObj[exitDirection] = [];
       }
       newRoom.exits = tempExitObj;
+
       let createdRoom = createRoom(board, newRoom);
       newRoom.board = createdRoom.board;
-      console.log("newroom", newRoom);
 
       board[rowIdx][colIdx] = newRoom;
     });

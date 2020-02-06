@@ -9,15 +9,8 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
   let newPositionCol = roomCoordinates[1] + VECTORS[direction][1];
   roomCoordinates = [newPositionRow, newPositionCol];
 
-  console.log(direction);
-  console.log(
-    "Object in game board of current room",
-    gameBoard[newPositionRow][newPositionCol]
-  );
-
   //need the next room
   let roomBoard = gameBoard[newPositionRow][newPositionCol].board;
-  console.log(roomBoard, "inside of updateROOM");
   let playerCoordinates;
 
   //make new player coordinates be next to door of new room
@@ -88,8 +81,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
     let doorCoordinates = [null, null];
     //get the north room and check if it's been visited
     let foundRoom = gameBoard[room.coordinates[0] - 1][room.coordinates[1]];
-    console.log("current room", room);
-    console.log("found room", foundRoom);
     if (foundRoom.visited) {
       //exits: [{"south": [0,1]}]
       //for north, we want the col value, index 1
@@ -114,8 +105,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
     let doorCoordinates = [null, null];
     //get the north room and check if it's been visited
     let foundRoom = gameBoard[room.coordinates[0] + 1][room.coordinates[1]];
-    console.log("current room", room);
-    console.log("found room", foundRoom);
     if (foundRoom.visited) {
       //exits: [{"north": [0,1]}]
       //for north, we want the col value, index 1
@@ -194,7 +183,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
   }
 
   let chickenStarts = [];
-  console.log("doors", doorEntrances);
   //case of 1 door, 3, and 4 doors
   while (doorEntrances.length > 0) {
     let startCell = doorEntrances.shift();

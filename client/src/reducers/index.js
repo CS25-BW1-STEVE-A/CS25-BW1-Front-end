@@ -86,6 +86,8 @@ export const reducer = (state, action) => {
       let startPlayerCoordinates = getStartingCoordinates(
         action.startingRoom.board
       );
+
+      console.log("inside reucder", action.gameBoard);
       return {
         game: {
           board: action.gameBoard,
