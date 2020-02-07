@@ -55,12 +55,16 @@ export default function() {
     // stuff here
     let size = 3;
     axiosWithAuth()
+      .get(`${baseURL}/adv/init`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+
+    axiosWithAuth()
       // .get(`${baseURL}/adv/init`)
       // .get(`http://localhost:5000/maze/${size}`)
       .get(`${baseURL}/adv/rows`)
       .then(res => {
         let board = res.data.rooms;
-        console.log("the board", board);
 
         addRoomsToBoard(board);
         //start game
@@ -79,6 +83,7 @@ export default function() {
     if (KEY_CODES[e.key] && state.game.isGameStart) {
       e.preventDefault();
       //make sure coordinates would work
+      //move post
       dispatch({
         type: "MOVE_PLAYER",
         direction: KEY_CODES[e.key]

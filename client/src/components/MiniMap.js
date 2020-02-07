@@ -45,8 +45,6 @@ export default function MiniMap({ state }) {
     }
   }
 
-  console.log(boardWithCroppedRows);
-
   let boardWithCroppedCols = [];
   let tempRow;
   for (let r = 0; r < boardWithCroppedRows.length; r++) {

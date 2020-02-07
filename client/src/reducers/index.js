@@ -1,3 +1,4 @@
+import { axiosWithAuth, baseURL } from "../utils/index";
 import { createRoom, updateRoom } from "../utils/room";
 import { updatePosition, getStartingCoordinates } from "../utils/player";
 
@@ -61,6 +62,14 @@ export const reducer = (state, action) => {
             if (firstBreak) break;
           }
         }
+
+        let newDirections = { UP: "n", DOWN: "s", LEFT: "w", RIGHT: "e" };
+        axiosWithAuth()
+          .post(`${baseURL}/adv/move`, {
+            direction: newDirections[action.direction]
+          })
+          .then(res => console.log("res from be??", res))
+          .catch(err => console.log(err));
       }
 
       let isGameOver = false;
