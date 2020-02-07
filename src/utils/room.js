@@ -248,3 +248,22 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
 
   return room;
 }
+
+export function randomChicken(roomBoard) {
+  //Random chance for chicken to be in that room 1 in 100
+  let randomNumber = Math.floor(Math.random() * 5);
+  let firstBreak;
+  if (randomNumber === 1) {
+    //loop through roomCoordinates, make the first "" cell we find into "Chicken"
+    for (let i = 0; i < roomBoard.length; i++) {
+      for (let j = 0; j < roomBoard[i].length; j++) {
+        if (roomBoard[i][j] === "") {
+          firstBreak = true;
+          roomBoard[i][j] = "🐓";
+          break;
+        }
+      }
+      if (firstBreak) break;
+    }
+  }
+}

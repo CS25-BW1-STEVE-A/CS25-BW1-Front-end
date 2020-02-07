@@ -34,6 +34,7 @@ export default function Register() {
       .then(res => {
         console.log("register res", res);
         localStorage.setItem("token", res.data.key);
+        localStorage.setItem("username", username);
         history.push("/game");
       })
       .catch(err => console.log(err));

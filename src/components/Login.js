@@ -42,6 +42,7 @@ export default function Login() {
         // console.log(Cookies.get("csrftoken"));
         // Cookies.set("X-CSRFToken", Cookies.get("csrftoken"));
         localStorage.setItem("token", res.data.key);
+        localStorage.setItem("username", username);
         history.push("/game");
       })
       .catch(err => console.log(err));

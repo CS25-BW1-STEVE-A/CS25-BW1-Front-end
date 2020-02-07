@@ -94,7 +94,7 @@ export default function() {
   useEventListener("keydown", moveCharacter);
 
   return (
-    <Flex margin="20px 0" justifyContent="center">
+    <Flex margin="80px 0" justifyContent="center">
       <Flex justifyContent="center" flexDirection="column">
         {state.game.isGameOver && <h1>You caught the chicken</h1>}
         <Button
@@ -113,7 +113,10 @@ export default function() {
             <Flex justifyContent="space-between" flexDirection="column">
               <MiniMap state={state} />
               <Console>
-                <p>You have entered {state.room.name}</p>
+                <p>Current Score: {state.player.score}</p>
+                <p>
+                  {state.player.name} has entered {state.room.name}
+                </p>
                 <p>{state.room.description}</p>
                 <p>{state.player.moveMessage}</p>
               </Console>

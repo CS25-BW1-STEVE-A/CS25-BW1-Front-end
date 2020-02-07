@@ -1,5 +1,5 @@
 import { axiosWithAuth, baseURL } from "../utils/index";
-import { createRoom, updateRoom } from "../utils/room";
+import { createRoom, updateRoom, randomChicken } from "../utils/room";
 import { updatePosition, getStartingCoordinates } from "../utils/player";
 
 //maybe dont' need this?
@@ -47,23 +47,6 @@ export const reducer = (state, action) => {
         roomCoordinates = result.roomCoordinates;
         roomBoard = result.roomBoard;
 
-        //Random chance for chicken to be in that room 1 in 100
-        let randomNumber = Math.floor(Math.random() * 100);
-        let firstBreak;
-        if (randomNumber === 17) {
-          //loop through roomCoordinates, make the first "" cell we find into "Chicken"
-          for (let i = 0; i < roomBoard.length; i++) {
-            for (let j = 0; j < roomBoard[i].length; j++) {
-              if (roomBoard[i][j] === "") {
-                firstBreak = true;
-                roomBoard[i][j] = "🐓";
-                break;
-              }
-            }
-            if (firstBreak) break;
-          }
-        }
-
         let cardinalDirections = {
           UP: "north",
           DOWN: "south",
@@ -78,15 +61,23 @@ export const reducer = (state, action) => {
           .then(res => console.log("res from be??", res))
           .catch(err => console.log(err));
 
-        moveMessage = `You have moved ${cardinalDirection}`;
+        moveMessage = `${state.player.name} has moved ${cardinalDirection}.`;
+
+        randomChicken(roomBoard);
       }
 
       let isGameOver = false;
       let isGameStart = true;
-
-      if (playerCoordinates === "Game Won") {
-        isGameOver = true;
-        isGameStart = false;
+      let chickenPoints = 0;
+      if (playerCoordinates === "Caught Chicken") {
+        //caught chicken
+        chickenPoints += 10;
+        playerCoordinates = state.player.coordinates;
+        //quick fix
+        if (action.direction === "UP") playerCoordinates[0]--;
+        if (action.direction === "DOWN") playerCoordinates[0]++;
+        if (action.direction === "RIGHT") playerCoordinates[1]++;
+        if (action.direction === "LEFT") playerCoordinates[1]--;
       }
 
       return {
@@ -99,7 +90,8 @@ export const reducer = (state, action) => {
         player: {
           ...state.player,
           coordinates: playerCoordinates,
-          moveMessage: moveMessage
+          moveMessage: moveMessage,
+          score: (state.player.score += chickenPoints)
         },
         room: {
           ...state.room,
@@ -123,7 +115,9 @@ export const reducer = (state, action) => {
         player: {
           coordinates: startPlayerCoordinates,
           direction: "",
-          moveMessage: ""
+          moveMessage: "",
+          name: localStorage.getItem("username"),
+          score: 0
         },
         room: {
           ...action.startingRoom
