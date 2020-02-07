@@ -1,4 +1,10 @@
 import { VECTORS } from "./player";
+import {
+  randomTypeOfRoom,
+  randomNameOfRoom,
+  randomDescription
+} from "../utils/randomRoomProperties";
+
 const uuidv1 = require("uuid/v1");
 
 //Board to help us find next room
@@ -194,6 +200,7 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
   //Make board full of walls
   let roomBoard = createEmptyBoard(size);
 
+  //[row,col] of all the door entrances - including fake doors for fake paths
   let doorEntrances = createDoorEntrances(
     room,
     roomBoard,
@@ -202,7 +209,7 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
     fakePaths
   );
 
-  //case of 1 door, 3, and 4 doors
+  //making paths - ie connecting doors
   while (doorEntrances.length > 0) {
     let startCell = doorEntrances.shift();
     let endCell = doorEntrances.shift();
@@ -245,6 +252,29 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
   }
 
   room.board = roomBoard;
+  //add on a type of room property
+  room.type = randomTypeOfRoom();
+  room.name = randomNameOfRoom(room.type);
+  room.description = randomDescription();
 
   return room;
+}
+
+export function randomChicken(roomBoard) {
+  //Random chance for chicken to be in that room 1 in 100
+  let randomNumber = Math.floor(Math.random() * 5);
+  let firstBreak;
+  if (randomNumber === 1) {
+    //loop through roomCoordinates, make the first "" cell we find into "Chicken"
+    for (let i = 0; i < roomBoard.length; i++) {
+      for (let j = 0; j < roomBoard[i].length; j++) {
+        if (roomBoard[i][j] === "") {
+          firstBreak = true;
+          roomBoard[i][j] = "🐓";
+          break;
+        }
+      }
+      if (firstBreak) break;
+    }
+  }
 }

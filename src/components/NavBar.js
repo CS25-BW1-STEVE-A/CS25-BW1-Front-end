@@ -4,10 +4,9 @@ import styled from "styled-components";
 
 const NavBar = styled.nav`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
   padding: 20px 0;
-  margin: 0px auto;
   background-color: lightgrey;
 `;
 
@@ -15,6 +14,8 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: #4e4eb2;
   font-weight: 700;
+  display: inline-block;
+  margin: 0 15px;
 `;
 export default function() {
   return (

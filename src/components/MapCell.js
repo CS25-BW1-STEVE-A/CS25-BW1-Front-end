@@ -4,7 +4,8 @@ import styled, { css } from "styled-components";
 
 const MiniMapRoom = styled.div`
   /*  */
-  border: 1px solid pink;
+  /* border: 1px solid pink; */
+  /* padding: 5px 10px; */
 `;
 
 const Row = styled.div`

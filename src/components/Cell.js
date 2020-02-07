@@ -1,48 +1,41 @@
 import React from "react";
 import styled, { css } from "styled-components";
-
-const colors = ["#848484", "#c0c0c0", "#b4b4b4"];
+import {
+  roomWall,
+  roomDoor,
+  roomFloor,
+  roomChicken,
+  roomIcon
+} from "../utils/typeOfRoom";
 
 const Cell = styled.div`
   width: 50px;
   height: 50px;
   font-size: 2rem;
-  background-color: #888481;
   position: relative;
+  
+  ${props =>
+    props.floor &&
+    css`
+      ${roomFloor(props.typeOfRoom)}
+    `}
 
   ${props =>
     props.door &&
     css`
-      ${"" /* background: url(${door}); */}
-      background-color: brown;
-      position: relative;
-      &:before {
-        content: "";
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        background-color: black;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+      ${roomDoor(props.typeOfRoom)}
     `}
+
   ${props =>
     props.wall &&
     css`
-      position: relative;
-      background-color: #ddcbbe;
+      ${roomWall(props.typeOfRoom)}
+    `};
 
-      &:before {
-        content: "";
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        background-color: #985040;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+  ${props =>
+    props.chicken &&
+    css`
+      ${roomChicken(props.typeOfRoom)}
     `};
 `;
 
@@ -50,12 +43,20 @@ export default function({ colIdx, rowIdx, state }) {
   const door = state.room.board[rowIdx][colIdx] === "Door" ? true : false;
   const wall = state.room.board[rowIdx][colIdx] === "Wall" ? true : false;
   const chicken = state.room.board[rowIdx][colIdx] === "🐓" ? true : false;
+  const floor = state.room.board[rowIdx][colIdx] === "" ? true : false;
 
   return (
-    <Cell className="cell" door={door} wall={wall}>
+    <Cell
+      typeOfRoom={state.room.type}
+      className="cell"
+      door={door}
+      wall={wall}
+      chicken={chicken}
+      floor={!(door || wall || chicken)}
+    >
       {state.player.coordinates[0] === rowIdx &&
       state.player.coordinates[1] === colIdx
-        ? "🏃‍♀️"
+        ? roomIcon(state.room.type)
         : ""}
       {chicken ? "🐓" : ""}
     </Cell>

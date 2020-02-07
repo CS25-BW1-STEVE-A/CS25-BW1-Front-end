@@ -22,13 +22,18 @@ const Flex = styled.div`
 const Console = styled.div`
   width: 100%;
   background: black;
-  color: #00ff00;
   flex: 2;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   border: 5px solid #999;
+  padding: 5px 10px;
+
+  p {
+    color: #00ff00;
+    margin: 7px 0;
+  }
 `;
 
 const Button = styled.button`
@@ -94,7 +99,7 @@ export default function() {
   useEventListener("keydown", moveCharacter);
 
   return (
-    <Flex margin="20px 0" justifyContent="center">
+    <Flex margin="80px 0" justifyContent="center">
       <Flex justifyContent="center" flexDirection="column">
         {state.game.isGameOver && <h1>You caught the chicken</h1>}
         <Button
@@ -113,8 +118,14 @@ export default function() {
             <Flex justifyContent="space-between" flexDirection="column">
               <MiniMap state={state} />
               <Console>
-                <p>You have entered {state.room.name}</p>
-                <p>{state.room.description}</p>
+                <div style={{ maxWidth: 300, textAlign: "center" }}>
+                  <p>Current Score: {state.player.score}</p>
+                  <p>
+                    {state.player.name} has entered {state.room.name}
+                  </p>
+                  <p>{state.room.description}</p>
+                  <p>{state.player.moveMessage}</p>
+                </div>
               </Console>
             </Flex>
           </Flex>

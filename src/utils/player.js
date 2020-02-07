@@ -21,7 +21,8 @@ export function updatePosition(board, direction, currentPosition) {
   if (board[newPositionRow][newPositionCol] === "Door") {
     return "Door";
   } else if (board[newPositionRow][newPositionCol] === "🐓") {
-    return "Game Won";
+    board[newPositionRow][newPositionCol] = "";
+    return "Caught Chicken";
   } else if (board[newPositionRow][newPositionCol] === "Wall") {
     return currentPosition;
   } else {
