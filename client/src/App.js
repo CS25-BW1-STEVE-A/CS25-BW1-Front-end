@@ -43,9 +43,7 @@ function App() {
         <Global />
         <Layout>
           <Switch>
-            <PrivateRoute path="/game">
-              <Game />
-            </PrivateRoute>
+            <PrivateRoute path="/game" component={Game} />
             <Route path="/login">
               <Login />
             </Route>
