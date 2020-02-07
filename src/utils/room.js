@@ -77,10 +77,8 @@ export function createEmptyRoom(size) {
   return room;
 }
 
-export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
-  //Make board full of walls
-  let roomBoard = createEmptyBoard(size);
-
+//room, roomBoard, doorEntrances (returning these)
+function createDoorEntrances(room, roomBoard, gameBoard, size, fakePaths) {
   let doorEntrances = [];
 
   // exits: {north: [], south: [], etc}
@@ -189,7 +187,21 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
     fakePaths--;
   }
 
-  let chickenStarts = [];
+  return doorEntrances;
+}
+
+export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
+  //Make board full of walls
+  let roomBoard = createEmptyBoard(size);
+
+  let doorEntrances = createDoorEntrances(
+    room,
+    roomBoard,
+    gameBoard,
+    size,
+    fakePaths
+  );
+
   //case of 1 door, 3, and 4 doors
   while (doorEntrances.length > 0) {
     let startCell = doorEntrances.shift();
@@ -222,7 +234,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
         curCell[1]--;
         direction[1]++;
       }
-      chickenStarts.push(curCell);
       roomBoard[curCell[0]][curCell[1]] = "    ";
     }
 
@@ -231,15 +242,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
       //unshift one of the two doors on there
       doorEntrances.unshift(endCell);
     }
-  }
-  //add chicken to middle of board
-  if (room.isChicken) {
-    let startingLocationIndex = Math.floor(
-      Math.random() * chickenStarts.length
-    );
-    let startingLocation = chickenStarts[startingLocationIndex];
-
-    roomBoard[startingLocation[0]][startingLocation[1]] = "🐓";
   }
 
   room.board = roomBoard;
