@@ -41,7 +41,5 @@ export function getStartingCoordinates(board) {
   }
 
   let index = Math.floor(Math.random() * startingChoices.length);
-  console.log(startingChoices);
-  console.log(index);
   return [startingChoices[index][0], startingChoices[index][1]];
 }

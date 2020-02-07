@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { baseURL } from "../utils/index";
+import { useHistory } from "react-router-dom";
 import {
   Flex,
   Background,
@@ -15,21 +16,25 @@ export default function Register() {
   const { register, handleSubmit, formState, errors } = useForm({
     mode: "onChange"
   });
+
+  const history = useHistory();
   const onSubmit = data => {
-    //const username = data.username
-    //const password = data.password
+    const username = data.username;
+    const password = data.password;
 
     //going to do test user etc
-    const testUser = "testuser";
-    const testPassword = "testpassword";
+    // const testUser = "testuser";
+    // const testPassword = "testpassword";
     axios
-      .post(`${baseURL}/api/login/`, {
-        username: testUser,
-        password: testPassword
+      .post(`${baseURL}/registration/`, {
+        username: username,
+        password1: password,
+        password2: password
       })
       .then(res => {
-        console.log(res);
+        console.log("register res", res);
         localStorage.setItem("token", res.data.key);
+        history.push("/game");
       })
       .catch(err => console.log(err));
   };
@@ -42,14 +47,15 @@ export default function Register() {
           <StyledInput
             placeholder="Username"
             name="username"
-            ref={register({ required: true })}
+            ref={register({ required: true, minLength: 4 })}
           />
           {errors.username && <Warning>This field is required</Warning>}
 
           <StyledInput
             placeholder="Password"
             name="password"
-            ref={register({ required: true })}
+            type="password"
+            ref={register({ required: true, minLength: 9 })}
           />
           {errors.username && <Warning>This field is required</Warning>}
 

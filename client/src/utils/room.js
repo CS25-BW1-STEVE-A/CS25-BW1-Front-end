@@ -1,4 +1,5 @@
 import { VECTORS } from "./player";
+const uuidv1 = require("uuid/v1");
 
 //Board to help us find next room
 //direction to help us find next room
@@ -9,15 +10,8 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
   let newPositionCol = roomCoordinates[1] + VECTORS[direction][1];
   roomCoordinates = [newPositionRow, newPositionCol];
 
-  console.log(direction);
-  console.log(
-    "Object in game board of current room",
-    gameBoard[newPositionRow][newPositionCol]
-  );
-
   //need the next room
   let roomBoard = gameBoard[newPositionRow][newPositionCol].board;
-  console.log(roomBoard, "inside of updateROOM");
   let playerCoordinates;
 
   //make new player coordinates be next to door of new room
@@ -64,7 +58,7 @@ export function updateRoom(gameBoard, direction, roomCoordinates) {
   return { roomCoordinates, playerCoordinates, roomBoard };
 }
 
-function createEmptyBoard(size) {
+export function createEmptyBoard(size) {
   let board = [];
   //making board empty ie all walls
   for (let i = 0; i < size; i++) {
@@ -77,7 +71,13 @@ function createEmptyBoard(size) {
   return board;
 }
 
-export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
+export function createEmptyRoom(size) {
+  let board = createEmptyBoard(size);
+  let room = { board: board, coordinates: [uuidv1(), uuidv1()], name: "EMPTY" };
+  return room;
+}
+
+export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
   //Make board full of walls
   let roomBoard = createEmptyBoard(size);
 
@@ -190,7 +190,6 @@ export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
   }
 
   let chickenStarts = [];
-  console.log("doors", doorEntrances);
   //case of 1 door, 3, and 4 doors
   while (doorEntrances.length > 0) {
     let startCell = doorEntrances.shift();

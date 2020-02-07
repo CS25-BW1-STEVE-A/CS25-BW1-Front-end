@@ -1,11 +1,11 @@
+import { axiosWithAuth, baseURL } from "../utils/index";
 import { createRoom, updateRoom } from "../utils/room";
 import { updatePosition, getStartingCoordinates } from "../utils/player";
-import { createBoard } from "../utils/game";
 
 //maybe dont' need this?
 export const initialState = {
   game: {
-    board: createBoard(10),
+    board: [],
     isGameOver: false,
     isGameStart: false
   },
@@ -15,7 +15,7 @@ export const initialState = {
   },
   //current room
   room: {
-    board: createBoard(5),
+    board: [],
     coordinates: [0, 0],
     name: "Let's Begin",
     isChicken: false
@@ -45,6 +45,31 @@ export const reducer = (state, action) => {
         playerCoordinates = result.playerCoordinates;
         roomCoordinates = result.roomCoordinates;
         roomBoard = result.roomBoard;
+
+        //Random chance for chicken to be in that room 1 in 100
+        let randomNumber = Math.floor(Math.random() * 100);
+        let firstBreak;
+        if (randomNumber === 17) {
+          //loop through roomCoordinates, make the first "" cell we find into "Chicken"
+          for (let i = 0; i < roomBoard.length; i++) {
+            for (let j = 0; j < roomBoard[i].length; j++) {
+              if (roomBoard[i][j] === "") {
+                firstBreak = true;
+                roomBoard[i][j] = "🐓";
+                break;
+              }
+            }
+            if (firstBreak) break;
+          }
+        }
+
+        let newDirections = { UP: "n", DOWN: "s", LEFT: "w", RIGHT: "e" };
+        axiosWithAuth()
+          .post(`${baseURL}/adv/move`, {
+            direction: newDirections[action.direction]
+          })
+          .then(res => console.log("res from be??", res))
+          .catch(err => console.log(err));
       }
 
       let isGameOver = false;
@@ -87,6 +112,8 @@ export const reducer = (state, action) => {
       let startPlayerCoordinates = getStartingCoordinates(
         action.startingRoom.board
       );
+
+      console.log("inside reucder", action.gameBoard);
       return {
         game: {
           board: action.gameBoard,

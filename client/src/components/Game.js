@@ -4,7 +4,7 @@ import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
 import { reducer, initialState } from "../reducers/index";
 import { axiosWithAuth, baseURL } from "../utils/index";
-import { board, randomChicken } from "../utils/game";
+import { addRoomsToBoard, randomChicken } from "../utils/game";
 import MiniMap from "../components/MiniMap";
 import styled, { css } from "styled-components";
 import { KEY_CODES } from "../utils/player";
@@ -32,12 +32,17 @@ const Console = styled.div`
 `;
 
 const Button = styled.button`
-  border: 2px solid #888481;
+  border: 0;
   padding: 1em 2em;
+  background-color: #4e4eb1;
+  color: #fff;
+  font-size: 16px;
   font-weight: 700;
+  transition: 0.25s opacity cubic-bezier(0.98, 0.26, 0.52, 0.96);
 
   &:hover {
     cursor: pointer;
+    opacity: 0.7;
   }
 
   display: ${({ disabled }) => (disabled ? "none" : "inline-block")};
@@ -47,15 +52,21 @@ export default function() {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const handleClick = () => {
-    //Change chicken position
-    console.log(board, "inside handle click");
-    randomChicken(board);
-
     // stuff here
+    let size = 3;
     axiosWithAuth()
-      .get(`${baseURL}/api/adv/init`)
+      .get(`${baseURL}/adv/init`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+
+    axiosWithAuth()
+      // .get(`${baseURL}/adv/init`)
+      // .get(`http://localhost:5000/maze/${size}`)
+      .get(`${baseURL}/adv/rows`)
       .then(res => {
-        console.log("axios with auth", res);
+        let board = res.data.rooms;
+
+        addRoomsToBoard(board);
         //start game
         dispatch({
           type: "GAME_START",
@@ -72,14 +83,13 @@ export default function() {
     if (KEY_CODES[e.key] && state.game.isGameStart) {
       e.preventDefault();
       //make sure coordinates would work
+      //move post
       dispatch({
         type: "MOVE_PLAYER",
         direction: KEY_CODES[e.key]
       });
     }
   };
-
-  console.log("state", state);
 
   useEventListener("keydown", moveCharacter);
 
