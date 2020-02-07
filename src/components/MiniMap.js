@@ -6,6 +6,7 @@ import { createEmptyRoom } from "../utils/room";
 const Map = styled.div`
   max-width: 100%;
   border: 5px solid #999;
+  padding: 5px 10px;
   border-bottom: 0;
   background-color: black;
 `;
