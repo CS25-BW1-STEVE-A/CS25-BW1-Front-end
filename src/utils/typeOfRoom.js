@@ -2,6 +2,8 @@
 export function roomIcon(typeOfRoom) {
   if (typeOfRoom === "normal") return "🏃‍♀️";
   else if (typeOfRoom === "water") return "🏄‍♂️";
+  else if (typeOfRoom === "air") return "🛩️";
+  else if (typeOfRoom === "lava") return "🚁";
 }
 
 //export background color for chickens
@@ -10,6 +12,10 @@ export function roomChicken(typeOfRoom) {
     return `background-color: #888481`;
   } else if (typeOfRoom === "water") {
     return `background-color: #5c5c5c`;
+  } else if (typeOfRoom === "air") {
+    return `background-color: skyblue;`;
+  } else if (typeOfRoom === "lava") {
+    return `background-color: #483C32`;
   }
 }
 //export background color for "" - floor
@@ -18,6 +24,10 @@ export function roomFloor(typeOfRoom) {
     return `background-color: #888481`;
   } else if (typeOfRoom === "water") {
     return `background-color: #3f88f6`;
+  } else if (typeOfRoom === "air") {
+    return `background-color: skyblue;`;
+  } else if (typeOfRoom === "lava") {
+    return `background-color: #CF1020`;
   }
 }
 //export background color for wall
@@ -76,6 +86,39 @@ export function roomWall(typeOfRoom) {
       transform: translate(-50%, -50%);
     }
     `;
+  } else if (typeOfRoom === "air") {
+    //here air
+    return `
+    position: relative;
+    background-color: skyblue;
+    
+    &::after, &::before {
+        content: '';
+        position: absolute;
+        background: white;
+        z-index: 1
+    }
+    
+    &::after  {
+        width: 25px; 
+        height: 25px;
+        top: 10px;
+        left: 15px; 
+        border-radius: 15px;
+    }
+    &::before {
+       width: 40px; 
+       height: 20px;
+       top: 20px; 
+       left: 5px;
+       border-radius: 25px;
+    
+    }
+    `;
+  } else if (typeOfRoom === "lava") {
+    return `
+        background-color: #654321;
+      `;
   }
 }
 
@@ -96,6 +139,50 @@ export function roomDoor(typeOfRoom) {
         }
       `;
   } else if (typeOfRoom === "water") {
-    return `background-color: #3f88f6`;
+    // return `background-color: #3f88f6`;
+    return `
+    background-color: white;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: gold;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  `;
+  } else if (typeOfRoom === "air") {
+    return `
+    background-color: white;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  `;
+  } else if (typeOfRoom === "lava") {
+    return `
+    background-color: black;
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-color: red;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  `;
   }
 }

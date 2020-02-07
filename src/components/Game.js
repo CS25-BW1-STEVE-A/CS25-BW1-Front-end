@@ -4,7 +4,7 @@ import Room from "./Room";
 import useEventListener from "../hooks/useEventListener";
 import { reducer, initialState } from "../reducers/index";
 import { axiosWithAuth, baseURL } from "../utils/index";
-import { addRoomsToBoard, randomChicken } from "../utils/game";
+import { addRoomsToBoard, randomChicken, makeMaze } from "../utils/game";
 import MiniMap from "../components/MiniMap";
 import styled, { css } from "styled-components";
 import { KEY_CODES } from "../utils/player";
@@ -69,8 +69,9 @@ export default function() {
       // .get(`http://localhost:5000/maze/${size}`)
       .get(`${baseURL}/adv/rows`)
       .then(res => {
-        let board = res.data.rooms;
-
+        // let board = res.data.rooms;
+        console.log("inside axios");
+        let board = makeMaze(10);
         addRoomsToBoard(board);
         //start game
         dispatch({

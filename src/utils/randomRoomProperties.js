@@ -1,4 +1,4 @@
-let typesOfRooms = ["water", "normal"];
+let typesOfRooms = ["water", "normal", "air", "lava"];
 
 export function randomTypeOfRoom() {
   let randomIndex = Math.floor(Math.random() * typesOfRooms.length);

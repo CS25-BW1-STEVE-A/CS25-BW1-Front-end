@@ -196,7 +196,12 @@ function createDoorEntrances(room, roomBoard, gameBoard, size, fakePaths) {
   return doorEntrances;
 }
 
-export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
+export function createRoom(
+  gameBoard,
+  room,
+  size = 10,
+  fakePaths = Math.floor(Math.random() * 10) + 5
+) {
   //Make board full of walls
   let roomBoard = createEmptyBoard(size);
 
