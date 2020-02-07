@@ -44,6 +44,23 @@ export const reducer = (state, action) => {
         playerCoordinates = result.playerCoordinates;
         roomCoordinates = result.roomCoordinates;
         roomBoard = result.roomBoard;
+
+        //Random chance for chicken to be in that room 1 in 100
+        let randomNumber = Math.floor(Math.random() * 100);
+        let firstBreak;
+        if (randomNumber === 17) {
+          //loop through roomCoordinates, make the first "" cell we find into "Chicken"
+          for (let i = 0; i < roomBoard.length; i++) {
+            for (let j = 0; j < roomBoard[i].length; j++) {
+              if (roomBoard[i][j] === "") {
+                firstBreak = true;
+                roomBoard[i][j] = "🐓";
+                break;
+              }
+            }
+            if (firstBreak) break;
+          }
+        }
       }
 
       let isGameOver = false;

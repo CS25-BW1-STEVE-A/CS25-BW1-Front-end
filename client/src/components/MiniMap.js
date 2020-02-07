@@ -19,8 +19,8 @@ export default function MiniMap({ state }) {
   //use room.coordinates
   //filter the board, so that rowIdx room.coordinates[0] - 1 to room.coordinates[0] + 1 and same for column
   let board = [...state.game.board];
-  console.log("state.room.coordinates", state.room.coordinates);
-  console.log("state.room.board.length", state.room.board.length);
+  // console.log("state.room.coordinates", state.room.coordinates);
+  // console.log("state.room.board.length", state.room.board.length);
   let boardWithCroppedRows = [];
   for (
     let i = state.room.coordinates[0] - 1;
@@ -73,7 +73,7 @@ export default function MiniMap({ state }) {
 
   board = boardWithCroppedCols;
 
-  console.log("please be right-------------", board);
+  // console.log("please be right-------------", board);
 
   return (
     <Map>
@@ -81,7 +81,9 @@ export default function MiniMap({ state }) {
         return (
           <MapRow key={rowIdx}>
             {board[rowIdx].map((col, colIdx) => {
-              console.log("roomCoordinates", col);
+              {
+                /* console.log("roomCoordinates", col); */
+              }
               return (
                 <MapCell
                   roomCoordinates={[col.coordinates[0], col.coordinates[1]]}

@@ -77,7 +77,7 @@ export function createEmptyRoom(size) {
   return room;
 }
 
-export function createRoom(gameBoard, room, size = 10, fakePaths = 2) {
+export function createRoom(gameBoard, room, size = 10, fakePaths = 7) {
   //Make board full of walls
   let roomBoard = createEmptyBoard(size);
 
