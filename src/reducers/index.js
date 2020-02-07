@@ -34,6 +34,7 @@ export const reducer = (state, action) => {
         action.direction,
         state.player.coordinates
       );
+      let moveMessage = "";
 
       if (playerCoordinates === "Door") {
         //call update room
@@ -63,13 +64,21 @@ export const reducer = (state, action) => {
           }
         }
 
-        let newDirections = { UP: "n", DOWN: "s", LEFT: "w", RIGHT: "e" };
+        let cardinalDirections = {
+          UP: "north",
+          DOWN: "south",
+          LEFT: "west",
+          RIGHT: "east"
+        };
+        let cardinalDirection = cardinalDirections[action.direction];
         axiosWithAuth()
           .post(`${baseURL}/adv/move`, {
-            direction: newDirections[action.direction]
+            direction: cardinalDirections[action.direction].slice(0, 1)
           })
           .then(res => console.log("res from be??", res))
           .catch(err => console.log(err));
+
+        moveMessage = `You have moved ${cardinalDirection}`;
       }
 
       let isGameOver = false;
@@ -89,7 +98,8 @@ export const reducer = (state, action) => {
         },
         player: {
           ...state.player,
-          coordinates: playerCoordinates
+          coordinates: playerCoordinates,
+          moveMessage: moveMessage
         },
         room: {
           ...state.room,
@@ -100,20 +110,10 @@ export const reducer = (state, action) => {
       };
 
     case "GAME_START":
-      //create a room
-      // let startRoomBoard = createRoom(
-      //   action.startingRoom.isChicken,
-      //   action.startingRoom.exits,
-      //   10,
-      //   5
-      // );
-
-      //get starting coordinates
       let startPlayerCoordinates = getStartingCoordinates(
         action.startingRoom.board
       );
 
-      console.log("inside reucder", action.gameBoard);
       return {
         game: {
           board: action.gameBoard,
@@ -122,7 +122,8 @@ export const reducer = (state, action) => {
         },
         player: {
           coordinates: startPlayerCoordinates,
-          direction: ""
+          direction: "",
+          moveMessage: ""
         },
         room: {
           ...action.startingRoom

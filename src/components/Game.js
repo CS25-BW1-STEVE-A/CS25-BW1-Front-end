@@ -115,6 +115,7 @@ export default function() {
               <Console>
                 <p>You have entered {state.room.name}</p>
                 <p>{state.room.description}</p>
+                <p>{state.player.moveMessage}</p>
               </Console>
             </Flex>
           </Flex>

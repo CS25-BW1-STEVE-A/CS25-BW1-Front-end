@@ -1,8 +1,18 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const move = keyframes`
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+`;
 
 const Chicken = styled.p`
-  animation-name: slidein;
+  animation-name: ${move};
   animation-duration: 10s;
   animation-iteration-count: infinite;
   animation-direction: reverse;

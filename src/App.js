@@ -25,15 +25,6 @@ const Global = createGlobalStyle`
     font-family: "Play", sans-serif;
   }
 
-  @keyframes slidein {
-    from {
-      transform: translateX(0%);
-    }
-
-    to {
-      transform: translateX(100%);
-    }
-  }
 `;
 
 function App() {
