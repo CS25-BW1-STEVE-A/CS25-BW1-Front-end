@@ -10,7 +10,8 @@ function changeName(authToken) {
       Authorization: `Token ${authToken}`
     },
     data: {
-      name: "Devin Bielejec"
+      name: process.argv[2],
+      confirm: "aye"
     }
   })
     .then(res => {

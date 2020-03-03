@@ -13,7 +13,7 @@ function seeInventory(authToken) {
     .then(res => {
       console.log(res.data);
     })
-    .catch(err => console.log(err.Error));
+    .catch(err => console.log(err));
 }
 
 if (process.argv[2] === "devin") {

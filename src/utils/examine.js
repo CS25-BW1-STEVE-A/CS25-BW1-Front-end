@@ -1,17 +1,16 @@
 const axios = require("axios");
 const { devinToken, sethToken, nazifaToken } = require("./tokens.js");
 
-function sellItems(authToken) {
+function examine(authToken) {
   //initialize
   axios({
     method: "post",
-    url: "https://lambda-treasure-hunt.herokuapp.com/api/adv/sell/",
+    url: "https://lambda-treasure-hunt.herokuapp.com/api/adv/examine/",
     headers: {
       Authorization: `Token ${authToken}`
     },
     data: {
-      name: "tiny treasure",
-      confirm: "yes"
+      name: "well"
     }
   })
     .then(res => {
@@ -21,13 +20,13 @@ function sellItems(authToken) {
 }
 
 if (process.argv[2] === "devin") {
-  sellItems(devinToken);
+  examine(devinToken);
 }
 
 if (process.argv[2] === "seth") {
-  sellItems(sethToken);
+  examine(sethToken);
 }
 
 if (process.argv[2] === "nazifa") {
-  sellItems(nazifaToken);
+  examine(nazifaToken);
 }

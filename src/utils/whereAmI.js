@@ -1,50 +1,38 @@
 const axios = require("axios");
 const { devinToken, sethToken, nazifaToken } = require("./tokens.js");
 
-const sleep = (milliseconds = 500) =>
+const sleep = (milliseconds = 1000) =>
   new Promise(resolve => setTimeout(resolve, milliseconds));
 
-function getStartingRoom(authToken) {
-  let r;
-  async function get(authToken) {
-    let result = await axios({
-      method: "get",
-      url: "https://lambda-treasure-hunt.herokuapp.com/api/adv/init/",
-      headers: {
-        Authorization: `Token ${authToken}`
-      }
+function get(authToken) {
+  return axios({
+    method: "get",
+    url: "https://lambda-treasure-hunt.herokuapp.com/api/adv/init/",
+    headers: {
+      Authorization: `Token ${authToken}`
+    }
+  })
+    .then(res => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch(err => {
+      console.error(err);
     });
-    await sleep(1000);
-    r = result.data;
-  }
-  get(authToken);
-  return r;
+}
+async function getStartingRoom(authToken) {
+  const result = await get(authToken);
+  return result;
 }
 
-// function getStartingRoom(authToken) {
-//   //initialize
-//   let startingRoomNumber;
-//   axios({
-//     method: "get",
-//     url: "https://lambda-treasure-hunt.herokuapp.com/api/adv/init/",
-//     headers: {
-//       Authorization: `Token ${authToken}`
-//     }
-//   })
-//     .then(res => {
-//       console.log(res.data);
-//       startingRoomNumber = res.data.room_id;
-//     })
-//     .catch(err => console.log(err.Error));
-// }
-
 if (process.argv[2] === "devin") {
-  getStartingRoom(devinToken);
+  get(devinToken);
 }
 
 if (process.argv[2] === "seth") {
-  let startingRoom = getStartingRoom(sethToken);
-  console.log(startingRoom, "HERHERHEHRHE");
+  let r = get(sethToken).then(result => {
+    return result;
+  });
 }
 
 if (process.argv[2] === "nazifa") {
